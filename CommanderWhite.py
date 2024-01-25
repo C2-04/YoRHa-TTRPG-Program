@@ -166,8 +166,14 @@ def statincreasifier(derstat, stats, desiredUnit):
         print("Fuck-a-doodle-doo! The stat didn't increase.")
 
 def hitcalcifier(Attacker, Defender):
-    atksts = getChar(Attacker)
-    defsts = getChar(Defender)
+    if len(Attacker) <= 3:
+        atksts = getChar(Attacker)
+    else:
+        atksts = getEnemy(Attacker)
+    if len(Defender) <= 3:
+        defsts = getChar(Defender)
+    else:
+        defsts = getEnemy(Defender)
     atk = atksts[atksts['Weapon Type']] + random.randint(-2, 3)
     mrl = atksts['MOR']
     dfs = defsts['Defense']
@@ -189,7 +195,29 @@ def getChar(unitName):
     stats = pickle.load(infile)
     infile.close()
     return(stats)
-
+def getEnemy(unitName):
+    infile = open(unitName+'.N2', 'rb')
+    stats = pickle.load(infile)
+    infile.close()
+    return(stats)
+def createEnemy(enemName):
+    stats = {}
+    stats['Machine'] = int(input('Enter machine attack: '))
+    stats['Defense'] = int(input('Enter defense: '))
+    stats['Movement'] = int(input('Enter mvement: '))
+    stats['MOR'] = 2
+    stats['Yield'] = int(input('Enter XP Yield: '))
+    stats['Max Health'] = int(input('Enter max health: '))
+    stats['Weapon Type'] = 'Machine'
+    stats['Defense'] = int(input('Enter defense: '))
+    stats['Evasion'] = float(input('Enter evasion: '))
+    stats['Accuracy'] = float(input('Enter accuracy: '))
+    stats['Unit Type'] = 'Machine'
+    stats['Personality'] = 'Machine'
+    with open(enemName+'.N2', 'wb') as outfile:
+        pickle.dump(stats, outfile)
+        outfile.close()
+    
 def editChar(desiredUnit, stats, desiredStat, newValue):
     stats[desiredStat] = newValue
     with open(desiredUnit+'.YoRHa', 'wb') as outfile: #WRITE BINARY DUMB FUCK
@@ -237,6 +265,8 @@ def main():
             editChar(desiredUnit, desiredEditUnitStats, desiredEditStat, newValue)
         if mode == "getunit":
             print(getChar(input("Enter the name of the unit you wish to display: ")))
+        if mode == "createEnemy":
+            createEnemy(input('Enter the name of the enemy you wish to create: '))
         if mode == "calcskill":
             desiredUnit = input("Enter the name of the unit you wish to test: ")
             desiredUnitStats = getChar(desiredUnit)
