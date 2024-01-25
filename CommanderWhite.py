@@ -165,7 +165,18 @@ def statincreasifier(derstat, stats, desiredUnit):
     else:
         print("Fuck-a-doodle-doo! The stat didn't increase.")
 
-def hitcalcifier(atk, acc, dfs, evd, mrl):
+def hitcalcifier(Attacker, Defender):
+    atksts = getChar(Attacker)
+    defsts = getChar(Defender)
+    atk = atksts[atksts['Weapon Type']] + random.randint(-2, 3)
+    mrl = atksts['MOR']
+    dfs = defsts['Defense']
+    acc = float(input('Enter accuracy: '))
+    evd = defsts['Evasion']
+    if atksts['Unit Type'] == 'B':
+        atk = atk + 3
+    if defsts['Unit Type'] == 'D':
+        dfs = dfs+ 3
     if random.random() >= acc*(1 - evd):
         print("You missed.")
     elif random.randint(1, 100) <= mrl:
@@ -177,7 +188,6 @@ def getChar(unitName):
     infile = open(unitName+'.YoRHa', 'rb')
     stats = pickle.load(infile)
     infile.close()
-    print("Operation complete.")
     return(stats)
 
 def editChar(desiredUnit, stats, desiredStat, newValue):
@@ -233,11 +243,8 @@ def main():
             desiredStat = input("Enter the stat you wish to test: ")
             statincreasifier(desiredStat, desiredUnitStats, desiredUnit)
         if mode == "calchit":
-            atk = float(input("Enter attack ")) + random.randint (-2, 3)
-            acc = float(input("Enter accuracy: "))
-            dfs = float(input("Enter defense (3*Toughness): "))
-            evd = float(input("Enter evasion (3*Agility): "))
-            mrl = float(input("Enter morale: "))
-            hitcalcifier(atk, acc, dfs, evd, mrl)
+            attackingUnit = input("Attacker: ")
+            defendingUnit = input("Defender: ")
+            hitcalcifier(attackingUnit, defendingUnit)
 
 main()
