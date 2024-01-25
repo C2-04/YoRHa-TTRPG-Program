@@ -193,7 +193,7 @@ def grantXP(toGrant, desiredUnit):
     stats['Level'] = int(math.ceil(stats['TotalXP']**(1/3)))
     if startLevel < stats["Level"]:
         print(desiredUnit + ' has reached level ' + str(stats['Level']) + '.')
-        for i in range(stats['Level'] - startLevel):
+        for i in range((stats['Level'] - startLevel)*(math.floor(stats['Level']/20) + 1)):
             levelstat = input('Enter the stat to increase by 1: ')
             stats[levelstat] = stats[levelstat] + 1
     stats['Max Health'] = 80 + (stats["Level"] + 4)*stats['TGH']
