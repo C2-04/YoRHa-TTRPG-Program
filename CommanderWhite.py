@@ -177,6 +177,7 @@ def getChar(unitName):
     infile = open(unitName+'.YoRHa', 'rb')
     stats = pickle.load(infile)
     infile.close()
+    print("Operation complete.")
     return(stats)
 
 def editChar(desiredUnit, stats, desiredStat, newValue):
