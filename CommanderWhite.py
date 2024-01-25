@@ -1,3 +1,6 @@
+# Please note that this program is bad and follows "garbage in, garbage out" philosophy.
+# If incorrect input is given the program may do silly things.
+# Avoid incorrect input and the program will avoid silly things.
 import random
 import math
 import pickle
