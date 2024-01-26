@@ -164,12 +164,17 @@ def registerUnit(unitName):
     with open('YoRHa Registry', 'wb') as outfile:
         units = pickle.dump(units, outfile)
         outfile.close()
-def printUnits():
+def printTable():
     with open('YoRHa Registry', 'rb') as infile:
         units = pickle.load(infile)
         infile.close()
-    print(units)
-
+    for i in range(10):
+        for j in range(100):
+            if units[j + 100*i] != '':
+                print(units[j + 100*i], sep = ' ', end = ' ')
+            else:
+                print('XXXX', sep = ' ', end = ' ')
+        print()
 def listweapons():
     idFile = open('weapons/bases/totalweapons.txt', 'r')
     id = int(idFile.readline().strip())
@@ -193,13 +198,15 @@ def listunits():
 def main():
     mode = None
     while mode != "quit":
-        mode = input("Enter the needed operation (create, listweap, listunit, editunit, register, assignWeap, quit): ")
+        mode = input("Enter the needed operation (create, listweap, listunit, printTable, editunit, register, assignWeap, quit): ")
         if mode == "create":
             creatifier()
         if mode == 'listweap':
             listweapons()
         if mode == 'listunit':
             listunits()
+        if mode == 'printTable':
+            printTable()
         if mode == "editunit":
             desiredUnit = input("Enter the name of the unit you wish to test: ")
             desiredEditUnitStats = getChar(desiredUnit)
