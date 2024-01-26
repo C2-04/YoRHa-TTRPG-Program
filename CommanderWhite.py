@@ -237,11 +237,20 @@ def grantXP(toGrant, desiredUnit):
     with open(desiredUnit+'.YoRHa', 'wb') as outfile: #WRITE BINARY DUMB FUCK
         pickle.dump(stats, outfile)
     print("Operation complete.")
-
+def listweapons():
+    idFile = open('weapons/bases/totalweapons.txt', 'r')
+    id = int(idFile.readline().strip())
+    idFile.close
+    for i in range(id):
+        with open("weapons/"+str(i + 1).zfill(5)+'.throngler', 'rb') as infile:
+            stats = pickle.load(infile)
+            print('ID:', stats['ID'], 'Name:', stats['name'], 'Level:', stats['Level'], 'Kills:', stats['Kills'])
+            infile.close()
+        
 def main():
     mode = None
     while mode != "quit":
-        mode = input("Enter the needed operation (create, fightsetup, calcskill, calchit, getunit, editunit, grantXP, quit): ")
+        mode = input("Enter the needed operation (create, fightsetup, calcskill, calchit, getunit, editunit, grantXP, quit, listweap): ")
         if mode == "fightsetup":
             lower_bound = int(input("Enter lower reward bound: "))
             upper_bound = int(input("Enter upper reward bound: "))
@@ -251,6 +260,8 @@ def main():
             itemRewards(enemNum)
         if mode == "create":
             creatifier()
+        if mode == 'listweap':
+            listweapons()
         if mode == "grantXP":
             toGrant = int(input("Enter the amount of XP you wish to give: "))
             desiredUnit = input("Enter the unit to grant XP to: ")
