@@ -126,6 +126,7 @@ def creatifier():
             pickle.dump(stats, outfile)
         print('Unit created successfully.')
         outfile.close()
+    registerUnit(unitName)
 
 def statifier(name, stat):
     for i in range (5):
@@ -221,7 +222,23 @@ def editChar(desiredUnit, stats, desiredStat, newValue):
     with open(desiredUnit+'.YoRHa', 'wb') as outfile: #WRITE BINARY DUMB FUCK
         pickle.dump(stats, outfile)
     print("Operation complete.")
-
+def registerUnit(unitName):
+    offset = {'A': 0, 'B': 100, 'C': 200, 'D': 300, 'E': 400, 'G': 500, 'H': 600, 'O': 700, 'R': 800, 'S': 900}
+    with open('YoRHa Registry', 'rb') as infile:
+        units = pickle.load(infile)
+        infile.close()
+    unitNumber = int("".join(filter(str.isdigit, unitName)))
+    unitType = ("".join(filter(str.isalpha, unitName)))
+    unitIndex = unitNumber + offset[unitType] - 1
+    units[unitIndex] = unitName
+    with open('YoRHa Registry', 'wb') as outfile:
+        units = pickle.dump(units, outfile)
+        outfile.close()
+def printUnits():
+    with open('YoRHa Registry', 'rb') as infile:
+        units = pickle.load(infile)
+        infile.close()
+    print(units)
 def grantXP(toGrant, desiredUnit):
     stats = getChar(desiredUnit)
     startLevel = stats['Level']
@@ -246,7 +263,17 @@ def listweapons():
             stats = pickle.load(infile)
             print('ID:', stats['ID'], 'Name:', stats['name'], 'Level:', stats['Level'], 'Kills:', stats['Kills'])
             infile.close()
-        
+def listunits():
+    with open('YoRHa Registry', 'rb') as infile:
+        units = pickle.load(infile)
+        infile.close()
+    for element in units:
+        if element != '':
+            infile = open(element+'.YoRHa', 'rb')
+            stats = pickle.load(infile)
+            infile.close()
+            print(element, 'Level:', stats['Level'])
+
 def main():
     mode = None
     while mode != "quit":
@@ -262,6 +289,8 @@ def main():
             creatifier()
         if mode == 'listweap':
             listweapons()
+        if mode == 'listunit':
+            listunits()
         if mode == "grantXP":
             toGrant = int(input("Enter the amount of XP you wish to give: "))
             desiredUnit = input("Enter the unit to grant XP to: ")
@@ -272,6 +301,8 @@ def main():
             desiredEditStat = input("Enter the stat you wish to edit: ")
             newValue = int(input("Enter the new value for the stat: "))
             editChar(desiredUnit, desiredEditUnitStats, desiredEditStat, newValue)
+        if mode == "register":
+            registerUnit(input("Enter the name of the unit you wish to register: "))
         if mode == "getunit":
             print(getChar(input("Enter the name of the unit you wish to display: ")))
         if mode == "createEnemy":
