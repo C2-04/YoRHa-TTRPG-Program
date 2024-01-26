@@ -47,6 +47,7 @@ def creatifier():
     stats['TotalXP'] = 0
     stats["Unit Type"] = unittype
     stats['Personality'] = unitNumber
+    stats["Weapon"] = '00000'
     if unittype == "A":
         unitName = unittype + str(unitNumber)
     elif unittype == "G":
@@ -72,7 +73,13 @@ def statifier(name, stat):
         elif statint <= 0.4:
             stat = stat - 1
     return(stat)
-
+def weaponAssign(unit, weapid):
+    stats = getChar(unit)
+    stats['Weapon'] = weapid
+    with open(unit+'.YoRHa', 'wb') as outfile: #WRITE BINARY DUMB FUCK
+        pickle.dump(stats, outfile)
+        outfile.close() 
+    print('Operation complete.')
 def statincreasifier(derstat, stats, desiredUnit):
     derstatToBasestat = {
         '1H Sword':'TGH',
@@ -143,7 +150,7 @@ def listweapons():
     for i in range(id):
         with open("weapons/"+str(i + 1).zfill(5)+'.throngler', 'rb') as infile:
             stats = pickle.load(infile)
-            print('ID:', stats['ID'], 'Name:', stats['name'], 'Level:', stats['Level'], 'Kills:', stats['Kills'])
+            print('ID:', stats['ID'], 'Name:', stats['name'],'Type:' ,stats['Type'], 'Level:', stats['Level'], 'Kills:', stats['Kills'])
             infile.close()
 def listunits():
     with open('YoRHa Registry', 'rb') as infile:
@@ -159,7 +166,7 @@ def listunits():
 def main():
     mode = None
     while mode != "quit":
-        mode = input("Enter the needed operation (create, listweap, lisunit, editunit, register, quit): ")
+        mode = input("Enter the needed operation (create, listweap, lisunit, editunit, register, assignWeap, quit): ")
         if mode == "create":
             creatifier()
         if mode == 'listweap':
@@ -175,7 +182,9 @@ def main():
         if mode == "register":
             registerUnit(input("Enter the name of the unit you wish to register: "))
         if mode == "getunit":
-            print(getChar(input("Enter the name of the unit you wish to display: ")))
-
-        
+            print(getChar(input("Enter the name of the unit you wish to display: ")))  
+        if mode == 'assignWeap':
+            unit = input("Enter the name of the unit to whom you wish to give a weapon: ")
+            weapid = input('Enter the ID of the weapon you wish to give them: ')
+            weaponAssign(unit, weapid)
 main()

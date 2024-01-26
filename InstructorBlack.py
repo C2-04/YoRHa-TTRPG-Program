@@ -94,7 +94,7 @@ def hitcalcifier(Attacker, Defender):
 def main():
     mode = None
     while mode != "quit":
-        mode = input("Enter the needed operation (fightsetup, calchit, quit): ")
+        mode = input("Enter the needed operation (fightsetup, calchit, calcskill, quit): ")
         if mode == "fightsetup":
             lower_bound = int(input("Enter lower reward bound: "))
             upper_bound = int(input("Enter upper reward bound: "))
