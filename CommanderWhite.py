@@ -75,10 +75,20 @@ def statifier(name, stat):
     return(stat)
 def weaponAssign(unit, weapid):
     stats = getChar(unit)
+    oldstats = getWeap(stats['Weapon'])
+    oldstats['Owner'] = ''
+    with open("weapons/"+stats["Weapon"]+'.throngler', 'wb') as outfile:
+        pickle.dump(oldstats, outfile)
+        outfile.close()
     stats['Weapon'] = weapid
     with open(unit+'.YoRHa', 'wb') as outfile: #WRITE BINARY DUMB FUCK
         pickle.dump(stats, outfile)
         outfile.close() 
+    newstats = getWeap(weapid)
+    newstats['Owner'] = unit
+    with open("weapons/"+stats["Weapon"]+'.throngler', 'wb') as outfile:
+        pickle.dump(newstats, outfile)
+        outfile.close()
     print('Operation complete.')
 def statincreasifier(derstat, stats, desiredUnit):
     derstatToBasestat = {
@@ -114,6 +124,11 @@ def getChar(unitName):
     stats = pickle.load(infile)
     infile.close()
     return(stats)
+def getWeap(weapid):
+    infile = open("weapons/"+weapid+'.throngler', 'rb')
+    stats = pickle.load(infile)
+    infile.close()
+    return(stats)
 def getEnemy(unitName):
     infile = open("enemies/"+unitName+'.N2', 'rb')
     stats = pickle.load(infile)
@@ -121,7 +136,7 @@ def getEnemy(unitName):
     return(stats)
 
 def editChar(desiredUnit, stats, desiredStat, newValue):
-    stats[desiredStat] = newValue
+    stats[desiredStat] = int(newValue)
     with open(desiredUnit+'.YoRHa', 'wb') as outfile: #WRITE BINARY DUMB FUCK
         pickle.dump(stats, outfile)
     print("Operation complete.")
@@ -150,7 +165,7 @@ def listweapons():
     for i in range(id):
         with open("weapons/"+str(i + 1).zfill(5)+'.throngler', 'rb') as infile:
             stats = pickle.load(infile)
-            print('ID:', stats['ID'], 'Name:', stats['name'],'Type:' ,stats['Type'], 'Level:', stats['Level'], 'Kills:', stats['Kills'])
+            print('ID:', stats['ID'], 'Owner:', stats['Owner'], 'Name:', stats['name'],'Type:' ,stats['Type'], 'Level:', stats['Level'], 'Kills:', stats['Kills'])
             infile.close()
 def listunits():
     with open('YoRHa Registry', 'rb') as infile:
@@ -177,7 +192,7 @@ def main():
             desiredUnit = input("Enter the name of the unit you wish to test: ")
             desiredEditUnitStats = getChar(desiredUnit)
             desiredEditStat = input("Enter the stat you wish to edit: ")
-            newValue = int(input("Enter the new value for the stat: "))
+            newValue = input("Enter the new value for the stat: ")
             editChar(desiredUnit, desiredEditUnitStats, desiredEditStat, newValue)
         if mode == "register":
             registerUnit(input("Enter the name of the unit you wish to register: "))
