@@ -189,7 +189,6 @@ def hitcalcifier(Attacker, Defender):
         print("Critical strike for", 2*max(atk-dfs, 1), "damage!")
     else:
         print("Hit for", max(atk-dfs, 1), 'damage!')
-
 def getChar(unitName):
     infile = open(unitName+'.YoRHa', 'rb')
     stats = pickle.load(infile)
