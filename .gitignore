@@ -1,3 +1,4 @@
 *.YoRHa
 masamune
 weapons/masamune.py
+weapons/*.throngler
