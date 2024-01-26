@@ -209,7 +209,6 @@ def createEnemy(enemName):
     stats['Yield'] = int(input('Enter XP Yield: '))
     stats['Max Health'] = int(input('Enter max health: '))
     stats['Weapon Type'] = 'Machine'
-    stats['Defense'] = int(input('Enter defense: '))
     stats['Evasion'] = float(input('Enter evasion: '))
     stats['Accuracy'] = float(input('Enter accuracy: '))
     stats['Unit Type'] = 'Machine'
