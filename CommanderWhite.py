@@ -196,7 +196,7 @@ def getChar(unitName):
     infile.close()
     return(stats)
 def getEnemy(unitName):
-    infile = open(unitName+'.N2', 'rb')
+    infile = open("enemies/"+unitName+'.N2', 'rb')
     stats = pickle.load(infile)
     infile.close()
     return(stats)
@@ -213,7 +213,7 @@ def createEnemy(enemName):
     stats['Accuracy'] = float(input('Enter accuracy: '))
     stats['Unit Type'] = 'Machine'
     stats['Personality'] = 'Machine'
-    with open(enemName+'.N2', 'wb') as outfile:
+    with open("enemies/"+enemName+'.N2', 'wb') as outfile:
         pickle.dump(stats, outfile)
         outfile.close()
     
