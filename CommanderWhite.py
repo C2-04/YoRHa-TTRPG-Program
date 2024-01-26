@@ -128,7 +128,19 @@ def getWeap(weapid):
     infile = open("weapons/"+weapid+'.throngler', 'rb')
     stats = pickle.load(infile)
     infile.close()
+    if stats['Kills'] <= 25:
+        stats['Level'] = 1
+    elif stats['Kills'] <= 75:
+        stats['Level'] = 2
+    elif stats['Kills'] <= 150:
+        stats['Level'] = 3
+    else:
+        stats['Level'] = 4
+    with open("weapons/"+weapid+'.throngler', 'wb') as outfile:
+        pickle.dump(stats, outfile)
+        outfile.close()
     return(stats)
+    
 def getEnemy(unitName):
     infile = open("enemies/"+unitName+'.N2', 'rb')
     stats = pickle.load(infile)
