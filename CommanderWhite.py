@@ -169,11 +169,13 @@ def printTable():
         units = pickle.load(infile)
         infile.close()
     for i in range(10):
-        for j in range(100):
-            if units[j + 100*i] != '':
-                print(units[j + 100*i], sep = ' ', end = ' ')
-            else:
-                print('XXXX', sep = ' ', end = ' ')
+        for j in range(10):
+            for k in range(10):
+                if units[100*i + 10*j+ k] != '':
+                    print('{:4}'.format(units[100*i + 10*j + k]), sep = ' ', end = ' ')
+                else:
+                    print('----', sep = ' ', end = ' ')
+            print()
         print()
 def listweapons():
     idFile = open('weapons/bases/totalweapons.txt', 'r')
