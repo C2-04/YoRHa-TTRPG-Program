@@ -181,7 +181,7 @@ def listunits():
 def main():
     mode = None
     while mode != "quit":
-        mode = input("Enter the needed operation (create, listweap, lisunit, editunit, register, assignWeap, quit): ")
+        mode = input("Enter the needed operation (create, listweap, listunit, editunit, register, assignWeap, quit): ")
         if mode == "create":
             creatifier()
         if mode == 'listweap':
