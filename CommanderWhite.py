@@ -4,7 +4,7 @@
 import random
 import math
 import pickle
-
+import os
 def creatifier():
     unittype = input("Need a specific type? ")
     if unittype == "no":
@@ -203,11 +203,39 @@ def printStats(unit):
     for element in statlist:
         print(element,':', stats[element], end = '   ')
     print()
+def deleteUnit():
+    unit = input('Enter the name of the unit to be deleted: ')
+    if input('Are you sure about this?: ') == 'Y':
+        if input('Are you REALLY sure about this?: ') == 'Y':
+            if input('This unit will be permanently deleted!: ') == 'Y':
+                if input('Is this really what you want? Think of ' + unit +'! Do you really want to throw them away?') == 'Y':
+                    if input('Enter the name of the unit to be deleted: ') == unit:
+                        os.remove(unit + ".YoRHa")
+                        with open('YoRHa Registry', 'rb') as infile:
+                            units = pickle.load(infile)
+                            infile.close()
+                        for i in range(1000):
+                            if units[i] == unit:
+                                units[i] = ''
+                        with open('YoRHa Registry', 'wb') as outfile:
+                            units = pickle.dump(units, outfile)
+                            outfile.close()
+                        print('Operation complete. Farewell, ' + unit +". You have served well.")
+                    else:
+                        print('The incorrect name was entered. No deletion will proceed.')
+                else:
+                    print('Deletion cancelled.')
+            else:
+                print('Deletion cancelled.')
+        else:
+            print('Deletion cancelled.')
+    else:
+         print('Deletion cancelled.')
 
 def main():
     mode = None
     while mode != "quit":
-        mode = input("Enter the needed operation (create, listweap, listunit, printCube, printUnit, editunit, register, assignWeap, quit): ")
+        mode = input("Enter the needed operation (create, listweap, listunit, printCube, printUnit, editunit, register, assignWeap, delete, quit): ")
         if mode == "create":
             creatifier()
         if mode == 'listweap':
@@ -230,4 +258,6 @@ def main():
             unit = input("Enter the name of the unit to whom you wish to give a weapon: ")
             weapid = input('Enter the ID of the weapon you wish to give them: ')
             weaponAssign(unit, weapid)
+        if mode == 'delete':
+            deleteUnit()
 main()
