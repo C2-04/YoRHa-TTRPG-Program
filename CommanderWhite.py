@@ -197,17 +197,24 @@ def listunits():
             infile.close()
             print(element, 'Level:', stats['Level'])
 
+def printStats(unit):
+    stats = getChar(unit)
+    statlist = stats.keys()
+    for element in statlist:
+        print(element,':', stats[element], end = '   ')
+    print()
+
 def main():
     mode = None
     while mode != "quit":
-        mode = input("Enter the needed operation (create, listweap, listunit, printTable, editunit, register, assignWeap, quit): ")
+        mode = input("Enter the needed operation (create, listweap, listunit, printCube, printUnit, editunit, register, assignWeap, quit): ")
         if mode == "create":
             creatifier()
         if mode == 'listweap':
             listweapons()
         if mode == 'listunit':
             listunits()
-        if mode == 'printTable':
+        if mode == 'printCube':
             printTable()
         if mode == "editunit":
             desiredUnit = input("Enter the name of the unit you wish to test: ")
@@ -217,8 +224,8 @@ def main():
             editChar(desiredUnit, desiredEditUnitStats, desiredEditStat, newValue)
         if mode == "register":
             registerUnit(input("Enter the name of the unit you wish to register: "))
-        if mode == "getunit":
-            print(getChar(input("Enter the name of the unit you wish to display: ")))  
+        if mode == "printUnit":
+            printStats(input("Enter the name of the unit you wish to get: ")) 
         if mode == 'assignWeap':
             unit = input("Enter the name of the unit to whom you wish to give a weapon: ")
             weapid = input('Enter the ID of the weapon you wish to give them: ')
