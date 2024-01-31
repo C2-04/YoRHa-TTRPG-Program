@@ -59,4 +59,5 @@ def main():
             takeInventory()
         if mode == 'give':
             giveGold()
-main()
+if __name__ == "__main__":
+    main()

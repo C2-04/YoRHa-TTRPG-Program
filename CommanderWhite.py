@@ -260,4 +260,5 @@ def main():
             weaponAssign(unit, weapid)
         if mode == 'delete':
             deleteUnit()
-main()
+if __name__ == "__main__":
+    main()
