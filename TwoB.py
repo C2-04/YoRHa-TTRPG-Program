@@ -31,9 +31,9 @@ class Board:
         self.squares[position] = friendly
         self.friendlies.append([friendly.name, friendly.position[0], friendly.position[1]])
 class Enemy:
-    def __init__(unittype, name, unitindex, health, allegiance, stats, position, self):
-        self.unittype = unittype
-        self.name = unittype + str(unitindex)
+    def __init__(unittype, unitindex, health, allegiance, stats, position, self):
+        self.unittype = unittype + str(unitindex)
+        self.name = unittype 
         self.health = health
         self.allegiance = allegiance
         self.stats = stats
@@ -59,11 +59,15 @@ class Enemy:
         # if its target is occupied then move to an adjacent valid square
         print('PLACEHOLDER')
 class Friendly:
-    def __init__(name, health, stats, position, self):
+    def __init__(name, health, stats, position, weapon, self):
         self.name = name
         self.health = health
         self.stats = stats
         self.position = position
+        if weapon['Type'] == 'Gun':
+            self.atkrange = 4
+        else:
+            self.atkrange = 1
     def takeDamage(damage, board, self):
         self.health = self.health - damage
         if self.health <= 0:
@@ -78,14 +82,27 @@ class Friendly:
             if element[0] == self.name:
                 board.squares[[element[1], element[2]]] = ''
                 board.friendlies.remove(element)
-        print('PLACEHOLDER')
-    def attack(self):
-        print('PLACEHOLDER')
-    def move(self):
+    def attack(board, self):
+        targetSquare = map(int, input('Enter target coordinates (comma-separated): ')).split(',')
+        if (abs(self.position[0] - targetSquare[1]) <= self.atkrange and abs(self[1] - targetSquare[1]) <= self.atkrange):
+            target = board.squares[targetSquare]
+            if target == '':
+                print("There's nothing on that square! You forfeit this unit's attack turn!!")
+            elif type(target) == Friendly:
+                print("Friendly fire is not permitted! You forfeit this unit's attack turn!")
+            else:
+                damage = hitcalcifier(self.name, target.name)
+                target.takeDamage(damage, board)
+                if target.health == 0:
+                    target.killEnemy(target)
+        else:
+            print("Out of range! You forfeit this unit's attack turn!")
+    def move(board, self):
         startSquare = self.position
-        endSquare = input('Enter new coordinates (comma-separated): ')
+        endSquare = map(int, input('Enter new coordinates (comma-separated): ')).split(',')
         if (abs(startSquare[0] - endSquare[0]) <= 2 and abs(startSquare[1] - endSquare[1]) <= 2):
             self.position = endSquare
+            board.squares[startSquare] = ''
+            board.squares[endSquare] = self
         else:
-            print("Invalid move! You lose this unit's turn! Goofball!")
-        print('PLACEHOLDER')
+            print("Invalid move! You forfeit this unit's move turn!")

@@ -104,13 +104,15 @@ def hitcalcifier(Attacker, Defender):
         dfs = dfs+ 3
     print('Chance to hit: '+ (str(round(acc*(1 - evd)*100))) + '%')
     print('Critical strike chance: '+ str(mrl) + '%')
+    damage = max(atk-dfs, 1)
     if random.random() >= acc*(1 - evd):
         print("You missed.")
     elif random.randint(1, 100) <= mrl:
-        print("Critical strike for", 2*max(atk-dfs, 1), "damage!")
+        damage = damage*2
+        print("Critical strike for", damage, "damage!")
     else:
-        print("Hit for", max(atk-dfs, 1), 'damage!')
-
+        print("Hit for", damage, 'damage!')
+    return(damage)
 def main():
     mode = None
     while mode != "quit":

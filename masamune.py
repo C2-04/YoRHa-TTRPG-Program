@@ -35,7 +35,7 @@ def createEnemy(enemName):
     stats = {}
     stats['Machine'] = int(input('Enter machine attack: '))
     stats['Defense'] = int(input('Enter defense: '))
-    stats['Movement'] = int(input('Enter mvement: '))
+    stats['Movement'] = int(input('Enter movement: '))
     stats['MOR'] = 2
     stats['Yield'] = int(input('Enter XP Yield: '))
     stats['Max Health'] = int(input('Enter max health: '))
