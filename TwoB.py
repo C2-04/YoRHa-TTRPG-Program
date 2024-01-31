@@ -1,7 +1,9 @@
 from CommanderWhite import *
 from InstructorBlack import *
 from Anemone import *
-
+# I was listening to the Drakengard 1 OST as I created this thing so please excuse any terrible code moments
+# It also might be a good idea to have some more input validation on this -- I really want to avoid having to scrap an entire battle because
+# a single mistyped input caused the whole thing to shit itself
 class Board:
     def __init__(size, self):
         #maybe the board should have a name
@@ -14,28 +16,35 @@ class Board:
         self.enemies = []
         self.friendlies = []
     def nextTurn(self):
-        self.turn = self.turn + 1
+        self.playerTurn()
+        if len(self.enemies) == 0:
+            exit
+        if len(self.friendlies) == 0:
+            exit
     def enemyTurn(enemies, self):
         for element in self.enemies:
             selectedenemy = self.squares[[element[1], element[2]]]
             selectedenemy.attack()
+            self.playerTurn()
     def playerTurn(self):
         for element in self.friendlies:
             selectedfriendly = self.squares[[element[1], element[2]]]
             selectedfriendly.move()
             selectedfriendly.attack()
+            self.playerTurn()
     def placeEnemy(enemy, position, self):
         self.squares[position] = enemy
         self.enemies.append([enemy.name, enemy.position[0], enemy.position[1]])
     def placeFriendly(friendly, position, self):
         self.squares[position] = friendly
         self.friendlies.append([friendly.name, friendly.position[0], friendly.position[1]])
+    def __str__(self):
+        return(self.squares)
 class Enemy:
-    def __init__(unittype, unitindex, health, allegiance, stats, position, self):
+    def __init__(unittype, unitindex, health, stats, position, self):
         self.unittype = unittype + str(unitindex)
         self.name = unittype 
         self.health = health
-        self.allegiance = allegiance
         self.stats = stats
         self.position = position
     def takeDamage(damage, board, self):
@@ -183,3 +192,43 @@ class Friendly:
             board.squares[endSquare] = self
         else:
             print("Invalid move! You forfeit this unit's move turn!")
+def main():
+    if input('Start battle?') == 'Y':
+        neededSize = int(input('Enter board size: '))
+        gameBoard = Board(neededSize)
+        lower_bound = int(input("Enter lower reward bound: "))
+        upper_bound = int(input("Enter upper reward bound: "))
+        weight = calculateReward(lower_bound, upper_bound)
+        selectedEnemies = selectEnemies(weight)
+        enemNum = selectedEnemies[0]
+        placementList = placeEnemies(enemNum, neededSize)
+        itemRewards(enemNum)
+        for i in range(enemNum):
+            enemyName = str(selectedEnemies[1][i]) + str(i)
+            stats = getEnemy(selectedEnemies[1][i])
+            enemyName = Enemy(selectedEnemies[1][i], i, stats['Health'], stats, placementList[i])
+            gameBoard.placeEnemy(enemyName, )
+        for element in gameBoard.squares:
+            print(element)
+        friendlySelect = []
+        while len(friendlySelect) < 10:
+            chooseUnit = input('Choose a unit: ')
+            if chooseUnit != 'end':
+                friendlySelect.append(chooseUnit)
+            else:
+                break
+        i = 0
+        while i < len(friendlySelect):
+            position = map(int, input('Enter new coordinates (comma-separated): ')).split(',')
+            if gameBoard.squares['position'] == '':
+                element = friendlySelect[i]
+                stats = getChar(element)
+                weapon = getWeap(stats['Weapon'])
+                element = Friendly(element, stats['Max Health'], stats, position, weapon)
+                gameBoard.placeFriendly(element, position)
+                i = i + 1
+            else:
+                ('Square already occupied.')
+        gameBoard.nextTurn()
+if __name__ == "__main__":
+    main()
