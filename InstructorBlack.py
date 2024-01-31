@@ -54,7 +54,7 @@ def selectEnemies(weight):
         selectedEnemy = random.choice(list(enemiesList.keys()))
     print(enemNum, "enemies:", ', '.join(chosenEnemies), "and a", abs(weight), "layer Defenseless Stack!")
     print(enhancements)
-    return (enemNum, chosenEnemies, enhancements)
+    return (enemNum, chosenEnemies, enhancements, weight)
 
 def itemRewards(weight):
     rewardList = []
