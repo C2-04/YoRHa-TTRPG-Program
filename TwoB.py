@@ -15,13 +15,20 @@ class Board:
         self.friendlies = []
     def nextTurn(self):
         self.turn = self.turn + 1
-    def enemyTurn(self):
-        print('PLACEHOLDER')
+    def enemyTurn(enemies, self):
+        for element in self.enemies:
+            selectedenemy = self.squares[[element[1], element[2]]]
+            selectedenemy.attack()
     def playerTurn(self):
-        print('PLACEHOLDER')
-    def placeEnemy(enemy, self):
+        for element in self.friendlies:
+            selectedfriendly = self.squares[[element[1], element[2]]]
+            selectedfriendly.move()
+            selectedfriendly.attack()
+    def placeEnemy(enemy, position, self):
+        self.squares[position] = enemy
         self.enemies.append([enemy.name, enemy.position[0], enemy.position[1]])
-    def placeFriendly(friendly, self):
+    def placeFriendly(friendly, position, self):
+        self.squares[position] = friendly
         self.friendlies.append([friendly.name, friendly.position[0], friendly.position[1]])
 class Enemy:
     def __init__(unittype, name, unitindex, health, allegiance, stats, position, self):
