@@ -43,15 +43,28 @@ class Enemy:
         if self.health <= 0:
             self.die(board)
     def die(board, self):
-        print('PLACEHOLDER')
         for element in board.enemies:
             if element[0] == self:
                 board.squares[[element[1], element[2]]] = ''
                 board.enemies.remove(element)
-    def attack(self):
+    def attack(board, self):
         # if a friendly is in range attack it
         #if not, move
-        print('PLACEHOLDER')
+        friendlyplaces = []
+        target = None
+        closestTargetPos = None
+        minDistance = board.size
+        for element in board.friendlies:
+            friendlyplaces.append([element[1], element[2]])
+        for element in friendlyplaces:
+            distance = max(abs(element[0] - self.position[0], abs(element[1] - self.position[1])))
+            if distance <= minDistance:
+                minDistance = distance
+                closestTargetPos = element
+        if distance == 1:
+            target = board.squares[closestTargetPos]
+            damage = hitcalcifier(self.name, target.name)
+            target.takeDamage(damage, board)
     def move(board, self):
         # pseudocode! for all elements in friendlies:
         # check the distance (adjacent squares) to each one
@@ -138,8 +151,9 @@ class Friendly:
     def levelUp(newLevel, newStats, self):
         self.stats = newStats
         self.health = self.stats['Max Health']
-    def killEnemy(enemy, self):
-        print('PLACEHOLDER')
+    def killEnemy(enemy, weapon, self):
+        self.stats['XP'] = self.stats['XP'] + enemy.stats['XP Yield']
+        weapon['Kills'] = weapon['Kills'] +1
     def die(board, self):
         for element in board.friendlies:
             if element[0] == self.name:

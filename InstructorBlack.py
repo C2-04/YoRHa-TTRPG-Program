@@ -107,6 +107,7 @@ def hitcalcifier(Attacker, Defender):
     damage = max(atk-dfs, 1)
     if random.random() >= acc*(1 - evd):
         print("You missed.")
+        damage = 0
     elif random.randint(1, 100) <= mrl:
         damage = damage*2
         print("Critical strike for", damage, "damage!")
