@@ -93,7 +93,7 @@ class Friendly:
             else:
                 damage = hitcalcifier(self.name, target.name)
                 target.takeDamage(damage, board)
-                if target.health == 0:
+                if target.health <= 0:
                     target.killEnemy(target)
         else:
             print("Out of range! You forfeit this unit's attack turn!")
