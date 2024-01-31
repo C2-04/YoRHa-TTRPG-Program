@@ -169,7 +169,7 @@ class Friendly:
                 board.squares[[element[1], element[2]]] = ''
                 board.friendlies.remove(element)
     def attack(board, self):
-        targetSquare = map(int, input('Enter target coordinates (comma-separated): ')).split(',')
+        targetSquare = map(int, input('Enter target coordinates (comma-separated): ').split(','))
         if (abs(self.position[0] - targetSquare[1]) <= self.atkrange and abs(self[1] - targetSquare[1]) <= self.atkrange):
             target = board.squares[targetSquare]
             if target == '':
@@ -185,7 +185,7 @@ class Friendly:
             print("Out of range! You forfeit this unit's attack turn!")
     def move(board, self):
         startSquare = self.position
-        endSquare = map(int, input('Enter new coordinates (comma-separated): ')).split(',')
+        endSquare = map(int, input('Enter new coordinates (comma-separated): ').split(','))
         if (abs(startSquare[0] - endSquare[0]) <= 2 and abs(startSquare[1] - endSquare[1]) <= 2):
             self.position = endSquare
             board.squares[startSquare] = ''
@@ -219,7 +219,7 @@ def main():
                 break
         i = 0
         while i < len(friendlySelect):
-            position = map(int, input('Enter new coordinates (comma-separated): ')).split(',')
+            position = map(int, input('Enter new coordinates (comma-separated): ').split(','))
             if gameBoard.squares['position'] == '':
                 element = friendlySelect[i]
                 stats = getChar(element)
