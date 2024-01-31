@@ -15,8 +15,8 @@ def calculateReward(lower_bound, upper_bound):
 def placeEnemies(enemies):
     enemyPlaces = []
     for i in range(enemies):
-        xCoord = random.randint(3, 10)
-        yCoord = random.randint(3, 10)
+        xCoord = random.randint(2, 9)
+        yCoord = random.randint(2, 9)
         enemyPlaces.append([xCoord, yCoord])
     print("Enemy places:", end = ' ')
     for element in enemyPlaces:
