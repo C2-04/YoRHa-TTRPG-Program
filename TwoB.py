@@ -33,6 +33,8 @@ class Enemy:
     def die(self):
         print('PLACEHOLDER')
         #remove it from the friendlies
+        #then grant kill credit to whatever killed it
+        #actually wait no put it in the killEnemy method
     def attack(self):
         # if a friendly is in range attack it
         #if not, move
@@ -57,6 +59,7 @@ class Friendly:
         self.stats = newStats
         self.health = self.stats['Max Health']
     def killEnemy(enemyType, self):
+        
         print('PLACEHOLDER')
     def die(self):
         print('PLACEHOLDER')
@@ -68,5 +71,5 @@ class Friendly:
         if (abs(startSquare[0] - endSquare[0]) <= 2 and abs(startSquare[1] - endSquare[1]) <= 2):
             self.position = endSquare
         else:
-            print("Invalid move! You lose this unit's turn!")
+            print("Invalid move! You lose this unit's turn! Goofball!")
         print('PLACEHOLDER')

@@ -16,9 +16,13 @@ def placeEnemies(enemies):
     enemyPlaces = []
     for i in range(enemies):
         xCoord = random.randint(3, 10)
-        yCoord = random.choice(["c", "d", "e", "f", "g", "h", "i", "j"])
-        enemyPlaces.append(str(xCoord) + yCoord)
-    print("Enemy places:", ', '.join(enemyPlaces))
+        yCoord = random.randint(3, 10)
+        enemyPlaces.append([xCoord, yCoord])
+    print("Enemy places:", end = ' ')
+    for element in enemyPlaces:
+        print(element, end = ' ')
+    print()
+    return(enemyPlaces)
 
 def selectEnemies(weight):
     enemNum = 1
@@ -34,20 +38,23 @@ def selectEnemies(weight):
                    "Gunslinger": 70,
                    }
     selectedEnemy = random.choice(list(enemiesList.keys()))
+    enhancements = ['']
     while weight >= enemiesList[selectedEnemy]:
         selectedWeight = enemiesList[selectedEnemy]
         if random.random() >= 0.9:
             selectedWeight = selectedWeight*2
-            selectedEnemy = "Enhanced "+ selectedEnemy
+            enhancements[-1] = enhancements[-1] + 'E'
         if random.random() >= 0.9:
             selectedWeight = selectedWeight*2
-            selectedEnemy =  selectedEnemy + " with a Gun"
+            enhancements[-1] = enhancements[-1] + 'G'
         weight = weight - selectedWeight
         chosenEnemies.append(selectedEnemy)
         enemNum = enemNum + 1
+        enhancements.append('')
         selectedEnemy = random.choice(list(enemiesList.keys()))
     print(enemNum, "enemies:", ', '.join(chosenEnemies), "and a", abs(weight), "layer Defenseless Stack!")
-    return enemNum
+    print(enhancements)
+    return (enemNum, chosenEnemies, enhancements)
 
 def itemRewards(weight):
     rewardList = []
@@ -112,7 +119,7 @@ def main():
             lower_bound = int(input("Enter lower reward bound: "))
             upper_bound = int(input("Enter upper reward bound: "))
             weight = calculateReward(lower_bound, upper_bound)
-            enemNum = selectEnemies(weight)
+            enemNum = selectEnemies(weight)[0]
             placeEnemies(enemNum)
             itemRewards(enemNum)
         if mode == "calchit":
