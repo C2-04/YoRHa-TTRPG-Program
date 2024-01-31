@@ -67,23 +67,36 @@ def itemRewards(weight):
     print(weight, "rewards:", ', '.join(rewardList))
 
 def hitcalcifier(Attacker, Defender):
-    if len(Attacker) <= 3:
+    if len(Attacker) <= 4:
         atksts = getChar(Attacker)
+        with open("weapons/"+atksts['Weapon']+'.throngler', 'rb') as infile:
+            stats = pickle.load(infile)
+            infile.close()
+        selectedAttack = input('Enter the desired attack: ')
+        weaponDamage = stats[selectedAttack][0]
+        acc = stats[selectedAttack][1]
+        minLevel = stats[selectedAttack][2]
+        if stats['Level'] < minLevel:
+            print('Weapon level must be higher.')
+            return()
     else:
         atksts = getEnemy(Attacker)
-    if len(Defender) <= 3:
+        acc = atksts['Accuracy']
+        weaponDamage = 0
+    if len(Defender) <= 4:
         defsts = getChar(Defender)
     else:
         defsts = getEnemy(Defender)
-    atk = atksts[atksts['Weapon Type']] + random.randint(-2, 3)
+    atk = atksts[stats['Type']] + random.randint(-2, 3) + weaponDamage
     mrl = atksts['MOR']
     dfs = defsts['Defense']
-    acc = float(input('Enter accuracy: '))
     evd = defsts['Evasion']
     if atksts['Unit Type'] == 'B':
         atk = atk + 3
     if defsts['Unit Type'] == 'D':
         dfs = dfs+ 3
+    print('Chance to hit: '+ (str(round(acc*(1 - evd)*100))) + '%')
+    print('Critical strike chance: '+ str(mrl) + '%')
     if random.random() >= acc*(1 - evd):
         print("You missed.")
     elif random.randint(1, 100) <= mrl:
@@ -111,3 +124,5 @@ def main():
             desiredUnitStats = getChar(desiredUnit)
             desiredStat = input("Enter the stat you wish to test: ")
             statincreasifier(desiredStat, desiredUnitStats, desiredUnit)
+if __name__ == "__main__":
+    main()
