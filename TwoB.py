@@ -45,19 +45,82 @@ class Enemy:
     def die(board, self):
         print('PLACEHOLDER')
         for element in board.enemies:
-            if element[0] == self.name:
+            if element[0] == self:
                 board.squares[[element[1], element[2]]] = ''
                 board.enemies.remove(element)
     def attack(self):
         # if a friendly is in range attack it
         #if not, move
         print('PLACEHOLDER')
-    def move(self):
+    def move(board, self):
         # pseudocode! for all elements in friendlies:
         # check the distance (adjacent squares) to each one
+        friendlyplaces = []
+        closestTargetPos = None
+        minDistance = board.size
+        for element in board.friendlies:
+            friendlyplaces.append([element[1], element[2]])
+        for element in friendlyplaces:
+            distance = max(abs(element[0] - self.position[0], abs(element[1] - self.position[1])))
+            if distance <= minDistance:
+                minDistance = distance
+                closestTargetPos = element
+        movement = self.stats['Movement']
         # then attempt to move to the closest one
-        # if its target is occupied then move to an adjacent valid square
-        print('PLACEHOLDER')
+        endSquare = [None, None]
+        if minDistance <= movement:
+            endSquare = closestTargetPos
+        else:
+            if closestTargetPos[0] < self.position[0]:
+                endSquare[0] = self.position[0] - movement
+            else:
+                endSquare[0] = self.position[0] + movement
+            if closestTargetPos[1] < self.position[1]:
+                endSquare[1] = self.position[1] - movement
+            else:
+                endSquare[1] = self.position[1] + movement
+        for element in endSquare:
+            if element < 0: element = 0
+            if element > board.size -1 : element = board.size -1 #don't move off the board and break the program
+        while board.squares[endSquare] != '': # if its target is occupied then move to an adjacent valid square
+            i = 0
+            if i%8 == 0:
+                endSquare[1] = endSquare [1] + 1
+            if board.squares[endSquare] == '':
+                break
+            if i%8 == 1:
+                endSquare[0] = endSquare [0] + 1
+            if board.squares[endSquare] == '':
+                break
+            if i%8 == 2:
+                endSquare[1] = endSquare [1] - 1  
+            if board.squares[endSquare] == '':
+                break
+            if i%8 == 3:
+                endSquare[1] = endSquare [1] - 1
+            if board.squares[endSquare] == '':
+                break
+            if i%8 == 4:
+                endSquare[0] = endSquare [0] - 1 
+            if board.squares[endSquare] == '':
+                break 
+            if i%8 == 5:
+                endSquare[0] = endSquare [0] - 1    
+            if board.squares[endSquare] == '':
+                break              
+            if i%8 == 6:
+                endSquare[1] = endSquare [1] + 1    
+            if board.squares[endSquare] == '':
+                break              
+            if i%8 == 7:
+                endSquare[1] = endSquare [1] + 1    
+            if board.squares[endSquare] == '':
+                break                     
+            else:
+                print('Enemy is blocked! It loses its move!')                 
+        board.squares[self.position] = ''
+        self.position = endSquare
+        board.squares[endSquare] = self
 class Friendly:
     def __init__(name, health, stats, position, weapon, self):
         self.name = name
