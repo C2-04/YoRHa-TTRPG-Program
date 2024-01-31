@@ -6,7 +6,10 @@ class Board:
     def __init__(size, self):
         #maybe the board should have a name
         self.size = int(size)
-        self.squares = 'how do I do this'
+        self.squares = {}
+        for i in size:
+            for j in size:
+                self.squares[[i, j]] = ''
         self.turn = 0
         self.enemies = []
         self.friendlies = []
@@ -16,8 +19,10 @@ class Board:
         print('PLACEHOLDER')
     def playerTurn(self):
         print('PLACEHOLDER')
-    def moveUnit(name, newPos, self):
-        name.position = newPos
+    def placeEnemy(enemy, self):
+        self.enemies.append([enemy.name, enemy.position[0], enemy.position[1]])
+    def placeFriendly(friendly, self):
+        self.friendlies.append([friendly.name, friendly.position[0], friendly.position[1]])
 class Enemy:
     def __init__(unittype, name, unitindex, health, allegiance, stats, position, self):
         self.unittype = unittype
@@ -26,15 +31,16 @@ class Enemy:
         self.allegiance = allegiance
         self.stats = stats
         self.position = position
-    def takeDamage(damage, self):
+    def takeDamage(damage, board, self):
         self.health = self.health - damage
         if self.health <= 0:
-            self.die()
-    def die(self):
+            self.die(board)
+    def die(board, self):
         print('PLACEHOLDER')
-        #remove it from the friendlies
-        #then grant kill credit to whatever killed it
-        #actually wait no put it in the killEnemy method
+        for element in board.enemies:
+            if element[0] == self.name:
+                board.squares[[element[1], element[2]]] = ''
+                board.enemies.remove(element)
     def attack(self):
         # if a friendly is in range attack it
         #if not, move
@@ -51,17 +57,20 @@ class Friendly:
         self.health = health
         self.stats = stats
         self.position = position
-    def takeDamage(damage, self):
+    def takeDamage(damage, board, self):
         self.health = self.health - damage
         if self.health <= 0:
-            self.die()
+            self.die(board)
     def levelUp(newLevel, newStats, self):
         self.stats = newStats
         self.health = self.stats['Max Health']
-    def killEnemy(enemyType, self):
-        
+    def killEnemy(enemy, self):
         print('PLACEHOLDER')
-    def die(self):
+    def die(board, self):
+        for element in board.friendlies:
+            if element[0] == self.name:
+                board.squares[[element[1], element[2]]] = ''
+                board.friendlies.remove(element)
         print('PLACEHOLDER')
     def attack(self):
         print('PLACEHOLDER')
