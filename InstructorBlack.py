@@ -12,11 +12,11 @@ def calculateReward(lower_bound, upper_bound):
             reward = reward - 1
     print("Reward:", reward)
     return(reward)
-def placeEnemies(enemies):
+def placeEnemies(enemies, boardSize = '12'):
     enemyPlaces = []
     for i in range(enemies):
-        xCoord = random.randint(2, 9)
-        yCoord = random.randint(2, 9)
+        xCoord = random.randint(2, boardSize - 3)
+        yCoord = random.randint(2, boardSize - 3)
         enemyPlaces.append([xCoord, yCoord])
     print("Enemy places:", end = ' ')
     for element in enemyPlaces:
