@@ -75,11 +75,12 @@ def statifier(name, stat):
     return(stat)
 def weaponAssign(unit, weapid):
     stats = getChar(unit)
-    oldstats = getWeap(stats['Weapon'])
-    oldstats['Owner'] = ''
-    with open("weapons/"+stats["Weapon"]+'.throngler', 'wb') as outfile:
-        pickle.dump(oldstats, outfile)
-        outfile.close()
+    if stats['Weapon'] != '00000':
+        oldstats = getWeap(stats['Weapon'])
+        oldstats['Owner'] = ''
+        with open("weapons/"+stats["Weapon"]+'.throngler', 'wb') as outfile:
+            pickle.dump(oldstats, outfile)
+            outfile.close()
     stats['Weapon'] = weapid
     with open(unit+'.YoRHa', 'wb') as outfile: #WRITE BINARY DUMB FUCK
         pickle.dump(stats, outfile)
@@ -181,7 +182,7 @@ def listweapons():
     idFile = open('weapons/bases/totalweapons.txt', 'r')
     id = int(idFile.readline().strip())
     idFile.close
-    for i in range(id):
+    for i in range(id -1):
         with open("weapons/"+str(i + 1).zfill(5)+'.throngler', 'rb') as infile:
             stats = pickle.load(infile)
             print('ID:', stats['ID'], 'Owner:', stats['Owner'], 'Name:', stats['name'],'Type:' ,stats['Type'], 'Level:', stats['Level'], 'Kills:', stats['Kills'])

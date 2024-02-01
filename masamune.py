@@ -21,16 +21,16 @@ def createWeapon(name):
     id = int(idFile.readline().strip())
     idFile.close
     idFile = open('weapons/bases/totalweapons.txt', 'w')
-    print(id, file=idFile)
+    newID = id + 1
+    print(newID, file=idFile)
     stats['ID'] = str(id).zfill(5)
     stats['Level'] = 1
-    stats['Kills'] = 0
+    stats['Kills'] = 2
     stats['Owner'] = ''
-    idFile = open('weapons/bases/totalweapons.txt', 'r')
-    id = int(idFile.readline().strip())
     with open("weapons/"+stats['ID']+'.throngler', 'wb') as outfile:
         pickle.dump(stats, outfile)
         outfile.close()
+createWeapon('Virtuous Treaty')
 def createEnemy(enemName):
     stats = {}
     stats['Machine'] = int(input('Enter machine attack: '))
