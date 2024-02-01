@@ -185,7 +185,7 @@ class Friendly:
         targetSquare = [None, None]
         targetSquare[0], targetSquare[1] = map(int, input('Enter target coordinates (comma-separated): ').split(','))
         targetSquare = tuple(targetSquare)
-        if (abs(self.position[0] - targetSquare[1]) <= self.atkrange and abs(self.position[1] - targetSquare[1]) <= self.atkrange):
+        if (abs(self.position[0] - targetSquare[0]) <= self.atkrange and abs(self.position[1] - targetSquare[1]) <= self.atkrange):
             target = self.board.squares[targetSquare]
             if target == '':
                 print("There's nothing on that square! You forfeit this unit's attack turn!!")
