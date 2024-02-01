@@ -30,9 +30,19 @@ def materialShop():
         with open('inventory.data', 'wb') as outfile:
             pickle.dump(inventory, outfile)
             outfile.close()
-
-def giveGold():
-    toGive = int(input('Enter the amount of gold you wish to give: '))
+def addItem(item):
+    with open('inventory.data', 'rb') as infile:
+        inventory = pickle.load(infile)
+        infile.close()
+    howMany = 1
+    try:
+        inventory[item] = inventory[item] + howMany
+    except KeyError:
+        inventory[item] = howMany
+    with open('inventory.data', 'wb') as outfile:
+        pickle.dump(inventory, outfile)
+        outfile.close()
+def giveGold(toGive):
     with open('inventory.data', 'rb') as infile:
         items = pickle.load(infile)
         infile.close()
@@ -58,6 +68,6 @@ def main():
         if mode == 'stock':
             takeInventory()
         if mode == 'give':
-            giveGold()
+            giveGold(int(input('Enter the amount of gold you wish to give: ')))
 if __name__ == "__main__":
     main()
