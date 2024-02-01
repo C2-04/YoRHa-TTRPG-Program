@@ -25,6 +25,9 @@ class Board:
         for element in self.enemies:
             selectedenemy = element
             selectedenemy.attack()
+        if len(self.friendlies) == 0:
+            input('All of your units have died!')
+            exit
         self.playerTurn()
     def playerTurn(self):
         for element in self.friendlies:
@@ -32,9 +35,10 @@ class Board:
             self.printBoard()
             selectedfriendly = element
             selectedfriendly.move()
-            self.printBoard()
             selectedfriendly.attack()
-            self.printBoard()
+        if len(self.enemies) == 0:
+            input('Well done, you have won!')
+            exit
         self.enemyTurn()
     def placeEnemy(self, enemy, position):
         self.squares[tuple(position)] = enemy
@@ -49,7 +53,10 @@ class Board:
         print()
         for i in range(neededSize):
             for j in range(neededSize):
-                print('|' + '{:^15}'.format(str(self.squares[(i, j)])) + '|', end='')
+                if self.squares[(i, j)] != '':
+                    print('|' + '{:^15}'.format(str(self.squares[(i, j)])+ ' '+ str(self.squares[(i, j)].health)) + '|', end='')
+                else:
+                    print('|               |', end = '')
             print('   ' + str(i))
     def __str__(self):
         return(self.squares)
@@ -68,7 +75,7 @@ class Enemy:
         return(self.name)
     def die(self):
         self.board.squares[self.position] = ''
-        self.board.friendlies.remove(self)
+        self.board.enemies.remove(self)
     def attack(self):
         # if a friendly is in range attack it
         #if not, move
@@ -106,7 +113,7 @@ class Enemy:
         # then attempt to move to the closest one
         endSquare = [None, None]
         if minDistance <= movement:
-            endSquare = closestTargetPos
+            endSquare = list(closestTargetPos)
         else:
             if closestTargetPos[0] < self.position[0]:
                 endSquare[0] = self.position[0] - movement
@@ -123,35 +130,35 @@ class Enemy:
             i = 0
             if i%8 == 0:
                 endSquare[1] = endSquare [1] + 1
-            if self.board.squares[endSquare] == '':
+            if self.board.squares[tuple(endSquare)] == '':
                 break
             if i%8 == 1:
                 endSquare[0] = endSquare [0] + 1
-            if self.board.squares[endSquare] == '':
+            if self.board.squares[tuple(endSquare)] == '':
                 break
             if i%8 == 2:
                 endSquare[1] = endSquare [1] - 1  
-            if self.board.squares[endSquare] == '':
+            if self.board.squares[tuple(endSquare)] == '':
                 break
             if i%8 == 3:
                 endSquare[1] = endSquare [1] - 1
-            if self.board.squares[endSquare] == '':
+            if self.board.squares[tuple(endSquare)] == '':
                 break
             if i%8 == 4:
                 endSquare[0] = endSquare [0] - 1 
-            if self.board.squares[endSquare] == '':
+            if self.board.squares[tuple(endSquare)] == '':
                 break 
             if i%8 == 5:
                 endSquare[0] = endSquare [0] - 1    
-            if self.board.squares[endSquare] == '':
+            if self.board.squares[tuple(endSquare)] == '':
                 break              
             if i%8 == 6:
                 endSquare[1] = endSquare [1] + 1    
-            if self.board.squares[endSquare] == '':
+            if self.board.squares[tuple(endSquare)] == '':
                 break              
             if i%8 == 7:
                 endSquare[1] = endSquare [1] + 1    
-            if self.board.squares[endSquare] == '':
+            if self.board.squares[tuple(endSquare)] == '':
                 break                     
             else:
                 print('Enemy is blocked! It loses its move!')                 
@@ -164,7 +171,8 @@ class Friendly:
         self.health = health
         self.stats = stats
         self.position = position
-        if weapon['Type'] == 'Gun':
+        self.weapon = weapon
+        if self.weapon['Type'] == 'Gun':
             self.atkrange = 4
         else:
             self.atkrange = 1
@@ -176,9 +184,9 @@ class Friendly:
     def levelUp(self, newStats):
         self.stats = newStats
         self.health = self.stats['Max Health']
-    def killEnemy(self, enemy, weapon):
-        self.stats['XP'] = self.stats['XP'] + enemy.stats['XP Yield']
-        weapon['Kills'] = weapon['Kills'] +1
+    def killEnemy(self, enemy):
+        self.stats['TotalXP'] = self.stats['TotalXP'] + enemy.stats['Yield']
+        self.weapon['Kills'] = self.weapon['Kills'] +1
     def die(self):
         self.board.squares[self.position] = ''
         self.board.friendlies.remove(self)
@@ -196,7 +204,7 @@ class Friendly:
                 damage = hitcalcifier(self.name, target.name)
                 target.takeDamage(damage)
                 if target.health <= 0:
-                    target.killEnemy(target)
+                    self.killEnemy(target)
         else:
             print("Out of range! You forfeit this unit's attack turn!")
     def move(self):
@@ -211,6 +219,7 @@ class Friendly:
             self.position = endSquare
             self.board.squares[startSquare] = ''
             self.board.squares[tuple(endSquare)] = self
+            self.board.printBoard()
         else:
             print("Invalid move! You forfeit this unit's move turn!")
     def __str__(self):
