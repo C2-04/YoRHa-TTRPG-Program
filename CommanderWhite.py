@@ -77,6 +77,8 @@ def weaponAssign(unit, weapid):
     stats = getChar(unit)
     if stats['Weapon'] != '00000':
         oldstats = getWeap(stats['Weapon'])
+        oldOwner = getChar(oldstats['Owner'])
+        oldOwner['Weapon'] = '00000'
         oldstats['Owner'] = ''
         with open("weapons/"+stats["Weapon"]+'.throngler', 'wb') as outfile:
             pickle.dump(oldstats, outfile)
@@ -116,7 +118,7 @@ def statincreasifier(derstat, stats, desiredUnit):
         stats[derstat] = stats[derstat] + 1
         with open(desiredUnit+'.YoRHa', 'wb') as outfile: #WRITE BINARY DUMB FUCK
             pickle.dump(stats, outfile)
-        outfile.close() 
+            outfile.close() 
     else:
         print("Fuck-a-doodle-doo! The stat didn't increase.")
 
@@ -141,7 +143,7 @@ def getWeap(weapid):
         pickle.dump(stats, outfile)
         outfile.close()
     return(stats)
-    
+
 def getEnemy(unitName):
     infile = open("enemies/"+unitName+'.N2', 'rb')
     stats = pickle.load(infile)
@@ -232,6 +234,22 @@ def deleteUnit():
             print('Deletion cancelled.')
     else:
          print('Deletion cancelled.')
+
+def grantXP(desiredUnit, toGrant):
+    stats = getChar(desiredUnit)
+    startLevel = stats['Level']
+    stats['TotalXP'] = stats['TotalXP'] + toGrant
+    stats['Level'] = int(math.ceil(stats['TotalXP']**(1/3)))
+    if startLevel < stats["Level"]:
+        print(desiredUnit + ' has reached level ' + str(stats['Level']) + '.')
+        for i in range((stats['Level'] - startLevel)*(math.floor(stats['Level']/20) + 1)):
+            levelstat = input('Enter the stat to increase by 1: ')
+            stats[levelstat] = stats[levelstat] + 1
+    stats['Max Health'] = 80 + (stats["Level"] + 4)*stats['TGH']
+    stats['Health'] = stats['Max Health']
+    with open(desiredUnit+'.YoRHa', 'wb') as outfile: #WRITE BINARY DUMB FUCK
+        pickle.dump(stats, outfile)
+    print("Operation complete.")
 
 def main():
     mode = None

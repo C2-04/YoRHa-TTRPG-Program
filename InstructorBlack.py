@@ -71,7 +71,7 @@ def itemRewards(weight):
             rewardList.append(random.choice(["Memory Alloy", "Machine Arm", "Machine Leg", 'Machine Torso', "Machine Head"]))
         else:
             rewardList.append("Machine Core")
-    print(weight, "rewards:", ', '.join(rewardList))
+    return(rewardList)
 
 def hitcalcifier(Attacker, Defender):
     if len(Attacker) <= 4:
@@ -112,10 +112,16 @@ def hitcalcifier(Attacker, Defender):
         damage = 0
     elif random.randint(1, 100) <= mrl:
         damage = damage*2
-        print("Critical strike for", damage, "damage!")
+        print("Critical strike on", Defender, "for", damage, "damage!")
     else:
-        print("Hit for", damage, 'damage!')
+        print("Hit on", Defender, "for", damage, 'damage!')
     return(damage)
+def weapKill(weapid):
+    stats = getWeap(weapid)
+    stats['Kills'] = stats['Kills'] + 1
+    with open("weapons/"+weapid+'.throngler', 'wb') as outfile:
+        pickle.dump(stats, outfile)
+        outfile.close()
 def main():
     mode = None
     while mode != "quit":

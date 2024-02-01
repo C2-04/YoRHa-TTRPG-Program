@@ -185,8 +185,13 @@ class Friendly:
         self.stats = newStats
         self.health = self.stats['Max Health']
     def killEnemy(self, enemy):
-        self.stats['TotalXP'] = self.stats['TotalXP'] + enemy.stats['Yield']
-        self.weapon['Kills'] = self.weapon['Kills'] +1
+        grantXP(self.name, enemy.stats['Yield'])
+        self.stats = getChar(self.name)
+        weapKill(self.stats['Weapon'])
+        statincreasifier(self.weapon['Type'], self.stats, self.name)
+        self.weap = getWeap(self.stats['Weapon'])
+        for element in itemRewards(1):
+            print(element, "dropped by the enemy!")
     def die(self):
         self.board.squares[self.position] = ''
         self.board.friendlies.remove(self)
