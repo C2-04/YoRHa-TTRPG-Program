@@ -75,10 +75,14 @@ def statifier(name, stat):
     return(stat)
 def weaponAssign(unit, weapid):
     stats = getChar(unit)
+    oldstats = getWeap(stats['Weapon'])
+    oldOwner = getChar(oldstats['Owner'])
+    oldOwner['Weapon'] = '00000'
+    with open(oldstats['Owner']+'.YoRHa', 'wb') as outfile: #WRITE BINARY DUMB FUCK
+        pickle.dump(oldOwner, outfile)
+        outfile.close() 
     if stats['Weapon'] != '00000':
         oldstats = getWeap(stats['Weapon'])
-        oldOwner = getChar(oldstats['Owner'])
-        oldOwner['Weapon'] = '00000'
         oldstats['Owner'] = ''
         with open("weapons/"+stats["Weapon"]+'.throngler', 'wb') as outfile:
             pickle.dump(oldstats, outfile)
@@ -151,7 +155,7 @@ def getEnemy(unitName):
     return(stats)
 
 def editChar(desiredUnit, stats, desiredStat, newValue):
-    stats[desiredStat] = int(newValue)
+    stats[desiredStat] = (newValue)
     with open(desiredUnit+'.YoRHa', 'wb') as outfile: #WRITE BINARY DUMB FUCK
         pickle.dump(stats, outfile)
     print("Operation complete.")
