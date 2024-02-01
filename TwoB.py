@@ -23,7 +23,7 @@ class Board:
             exit
     def enemyTurn(self):
         for element in self.enemies:
-            selectedenemy = self.squares[(element[1], element[2])]
+            selectedenemy = element
             selectedenemy.attack()
             print('Enemy has taken a turn.')
         self.playerTurn()
@@ -31,16 +31,16 @@ class Board:
         for element in self.friendlies:
             print('Your turn.')
             self.printBoard()
-            selectedfriendly = self.squares[(element[1], element[2])]
+            selectedfriendly = element
             selectedfriendly.move()
             selectedfriendly.attack()
         self.enemyTurn()
     def placeEnemy(self, enemy, position):
         self.squares[tuple(position)] = enemy
-        self.enemies.append([enemy.name, enemy.position[0], enemy.position[1]])
+        self.enemies.append(enemy)
     def placeFriendly(self, friendly, position):
         self.squares[tuple(position)] = friendly
-        self.friendlies.append([friendly.name, friendly.position[0], friendly.position[1]])
+        self.friendlies.append(friendly)
     def printBoard(self):
         neededSize = self.size
         for i in range(neededSize):
@@ -54,39 +54,36 @@ class Board:
         return(self.squares)
 class Enemy:
     def __init__(self, unittype, unitindex, health, stats, position, board):
-        self.unittype = unittype + ' ' + str(unitindex)
         self.name = unittype 
         self.health = health
         self.stats = stats
         self.position = position
         self.board = board
-    def takeDamage(self, damage, board):
+    def takeDamage(self, damage):
         self.health = self.health - damage
         if self.health <= 0:
-            self.die(board)
+            self.die()
     def __str__(self):
-        return(self.unittype)
+        return(self.name)
     def die(self):
-        for element in self.board.enemies:
-            if element[0] == self:
-                self.board.squares[[element[1], element[2]]] = ''
-                self.board.enemies.remove(element)
+        self.board.squares[self.position] = ''
+        self.board.friendlies.remove(self)
     def attack(self):
         # if a friendly is in range attack it
         #if not, move
-        friendlyplaces = []
+        nonenemy = []
         target = None
         closestTargetPos = None
         minDistance = self.board.size
         for element in self.board.friendlies:
-            friendlyplaces.append([element[1], element[2]])
-        for element in friendlyplaces:
+            nonenemy.append(element.position)
+        for element in nonenemy:
             distance = max(abs(element[0] - self.position[0]), abs(element[1] - self.position[1]))
             if distance <= minDistance:
                 minDistance = distance
                 closestTargetPos = element
         if distance == 1:
-            target = self.board.squares[closestTargetPos]
+            target = self.board.squares[tuple(closestTargetPos)]
             damage = hitcalcifier(self.name, target.name)
             target.takeDamage(damage)
     def move(self):
@@ -96,7 +93,7 @@ class Enemy:
         closestTargetPos = None
         minDistance = self.board.size
         for element in self.board.friendlies:
-            friendlyplaces.append([element[1], element[2]])
+            friendlyplaces.append(element.position)
         for element in friendlyplaces:
             distance = max(abs(element[0] - self.position[0]), abs(element[1] - self.position[1]))
             if distance <= minDistance:
@@ -157,7 +154,7 @@ class Enemy:
                 print('Enemy is blocked! It loses its move!')                 
         self.board.squares[self.position] = ''
         self.position = endSquare
-        self.board.squares[endSquare] = self
+        self.board.squares[tuple(endSquare)] = self
 class Friendly:
     def __init__(self, name, health, stats, position, weapon, board):
         self.name = name
@@ -180,10 +177,8 @@ class Friendly:
         self.stats['XP'] = self.stats['XP'] + enemy.stats['XP Yield']
         weapon['Kills'] = weapon['Kills'] +1
     def die(self):
-        for element in self.board.friendlies:
-            if element[0] == self.name:
-                self.board.squares[[element[1], element[2]]] = ''
-                self.board.friendlies.remove(element)
+        self.board.squares[self.position] = ''
+        self.board.friendlies.remove(self)
     def attack(self):
         targetSquare = [None, None]
         targetSquare[0], targetSquare[1] = map(int, input('Enter target coordinates (comma-separated): ').split(','))
@@ -210,7 +205,6 @@ class Friendly:
             self.position = endSquare
             self.board.squares[startSquare] = ''
             self.board.squares[tuple(endSquare)] = self
-            self.board.friendlies = [self, self.position[0], self.position[1]]
         else:
             print("Invalid move! You forfeit this unit's move turn!")
     def __str__(self):
