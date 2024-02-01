@@ -25,7 +25,6 @@ class Board:
         for element in self.enemies:
             selectedenemy = element
             selectedenemy.attack()
-            print('Enemy has taken a turn.')
         self.playerTurn()
     def playerTurn(self):
         for element in self.friendlies:
@@ -84,10 +83,12 @@ class Enemy:
             if distance <= minDistance:
                 minDistance = distance
                 closestTargetPos = element
-        if distance == 1:
+        if distance <= 1:
             target = self.board.squares[tuple(closestTargetPos)]
             damage = hitcalcifier(self.name, target.name)
             target.takeDamage(damage)
+        else:
+            self.move()
     def move(self):
         # pseudocode! for all elements in friendlies:
         # check the distance (adjacent squares) to each one
@@ -154,8 +155,8 @@ class Enemy:
                 break                     
             else:
                 print('Enemy is blocked! It loses its move!')                 
-        self.board.squares[self.position] = ''
-        self.position = endSquare
+        self.board.squares[tuple(self.position)] = ''
+        self.position = tuple(endSquare)
         self.board.squares[tuple(endSquare)] = self
 class Friendly:
     def __init__(self, name, health, stats, position, weapon, board):
