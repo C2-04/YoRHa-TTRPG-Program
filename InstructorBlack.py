@@ -25,7 +25,7 @@ def placeEnemies(enemies, boardSize = '12'):
     return(enemyPlaces)
 
 def selectEnemies(weight):
-    enemNum = 1
+    enemNum = 0
     chosenEnemies = []
     enemiesList = {"Small Stubby" : 20,
                    "Medium Biped" : 50,
@@ -52,8 +52,6 @@ def selectEnemies(weight):
         enemNum = enemNum + 1
         enhancements.append('')
         selectedEnemy = random.choice(list(enemiesList.keys()))
-    print(enemNum, "enemies:", ', '.join(chosenEnemies), "and a", abs(weight), "layer Defenseless Stack!")
-    print(enhancements)
     return (enemNum, chosenEnemies, enhancements, weight)
 
 def itemRewards(weight):
@@ -132,7 +130,6 @@ def main():
             weight = calculateReward(lower_bound, upper_bound)
             enemNum = selectEnemies(weight)[0]
             placeEnemies(enemNum)
-            itemRewards(enemNum)
         if mode == "calchit":
             attackingUnit = input("Attacker: ")
             defendingUnit = input("Defender: ")
