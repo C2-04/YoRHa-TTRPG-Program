@@ -33,7 +33,9 @@ class Board:
             self.printBoard()
             selectedfriendly = element
             selectedfriendly.move()
+            self.printBoard()
             selectedfriendly.attack()
+            self.printBoard()
         self.enemyTurn()
     def placeEnemy(self, enemy, position):
         self.squares[tuple(position)] = enemy
@@ -201,7 +203,7 @@ class Friendly:
         endSquare = [None, None]
         endSquare[0], endSquare[1] = map(int, input('Enter new coordinates (comma-separated): ').split(','))
         tuple(endSquare)
-        if self.board.squares[endSquare] != '':
+        if self.board.squares[tuple(endSquare)] != '':
             print("Square is blocked! You forfeit this unit's move turn!")
             return()
         if (abs(startSquare[0] - endSquare[0]) <= 2 and abs(startSquare[1] - endSquare[1]) <= 2):
