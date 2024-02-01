@@ -18,10 +18,6 @@ def placeEnemies(enemies, boardSize = '12'):
         xCoord = random.randint(2, boardSize - 3)
         yCoord = random.randint(2, boardSize - 3)
         enemyPlaces.append([xCoord, yCoord])
-    print("Enemy places:", end = ' ')
-    for element in enemyPlaces:
-        print(element, end = ' ')
-    print()
     return(enemyPlaces)
 
 def selectEnemies(weight):

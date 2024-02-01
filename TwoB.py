@@ -252,7 +252,7 @@ def main():
         friendlySelect = []
         while len(friendlySelect) < 10:
             chooseUnit = input('Choose a unit: ')
-            if chooseUnit != 'end':
+            if (chooseUnit != 'end') and (chooseUnit not in friendlySelect):
                 friendlySelect.append(chooseUnit)
             else:
                 break
