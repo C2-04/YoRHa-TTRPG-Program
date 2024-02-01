@@ -44,12 +44,12 @@ class Board:
     def printBoard(self):
         neededSize = self.size
         for i in range(neededSize):
+            print('|'+ '{:^15}'.format(str(i)) +'|', end = '')
+        print()
+        for i in range(neededSize):
             for j in range(neededSize):
-                if self.squares[(i, j)] != '':
-                    print('|' + str(self.squares[(i, j)]), end = '|­')
-                else:
-                    print('|          |', end = '')
-            print()
+                print('|' + '{:^15}'.format(str(self.squares[(i, j)])) + '|', end='')
+            print('   ' + str(i))
     def __str__(self):
         return(self.squares)
 class Enemy:
@@ -201,6 +201,9 @@ class Friendly:
         endSquare = [None, None]
         endSquare[0], endSquare[1] = map(int, input('Enter new coordinates (comma-separated): ').split(','))
         tuple(endSquare)
+        if self.board.squares[endSquare] != '':
+            print("Square is blocked! You forfeit this unit's move turn!")
+            return()
         if (abs(startSquare[0] - endSquare[0]) <= 2 and abs(startSquare[1] - endSquare[1]) <= 2):
             self.position = endSquare
             self.board.squares[startSquare] = ''
@@ -228,13 +231,7 @@ def main():
                 gameBoard.placeEnemy(enemyName, placementList[i] )
             except FileNotFoundError:
                 print('Enemy skipped, not defined yet.')
-        for i in range(neededSize):
-            for j in range(neededSize):
-                if gameBoard.squares[(i, j)] != '':
-                    print('|' + str(gameBoard.squares[(i, j)]), end = '|­')
-                else:
-                    print('|          |', end = '')
-            print()
+        gameBoard.printBoard()
         friendlySelect = []
         while len(friendlySelect) < 10:
             chooseUnit = input('Choose a unit: ')
