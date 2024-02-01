@@ -61,7 +61,7 @@ class Board:
     def __str__(self):
         return(self.squares)
 class Enemy:
-    def __init__(self, unittype, unitindex, health, stats, position, board):
+    def __init__(self, unittype, health, stats, position, board):
         self.name = unittype 
         self.health = health
         self.stats = stats
@@ -244,7 +244,7 @@ def main():
             enemyName = str(selectedEnemies[1][i]) + str(i)
             try:
                 stats = getEnemy(selectedEnemies[1][i])
-                enemyName = Enemy(selectedEnemies[1][i], i, stats['Max Health'], stats, tuple(placementList[i]), gameBoard)
+                enemyName = Enemy(selectedEnemies[1][i], stats['Max Health'], stats, tuple(placementList[i]), gameBoard)
                 gameBoard.placeEnemy(enemyName, placementList[i] )
             except FileNotFoundError:
                 print('Enemy skipped, not defined yet.')
@@ -259,7 +259,10 @@ def main():
         i = 0
         while i < len(friendlySelect):
             position = [None, None]
-            position[0], position[1] = map(int, input('Deploy ' + friendlySelect[i] + ' to (comma-separated): ').split(','))
+            try:
+                position[0], position[1] = map(int, input('Deploy ' + friendlySelect[i] + ' to (comma-separated): ').split(','))
+            except ValueError:
+                print('What?')
             tuple(position)
             if gameBoard.squares[tuple(position)] == '':
                 element = friendlySelect[i]
