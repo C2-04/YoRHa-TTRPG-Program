@@ -5,13 +5,13 @@ from Anemone import *
 # It also might be a good idea to have some more input validation on this -- I really want to avoid having to scrap an entire battle because
 # a single mistyped input caused the whole thing to shit itself
 class Board:
-    def __init__(size, self):
+    def __init__(self, size):
         #maybe the board should have a name
         self.size = int(size)
         self.squares = {}
-        for i in size:
-            for j in size:
-                self.squares[[i, j]] = ''
+        for i in range(size):
+            for j in range(size):
+                self.squares[tuple([i, j])] = ''
         self.turn = 0
         self.enemies = []
         self.friendlies = []
@@ -21,69 +21,84 @@ class Board:
             exit
         if len(self.friendlies) == 0:
             exit
-    def enemyTurn(enemies, self):
+    def enemyTurn(self):
         for element in self.enemies:
-            selectedenemy = self.squares[[element[1], element[2]]]
+            selectedenemy = self.squares[(element[1], element[2])]
             selectedenemy.attack()
-            self.playerTurn()
+            print('Enemy has taken a turn.')
+        self.playerTurn()
     def playerTurn(self):
         for element in self.friendlies:
-            selectedfriendly = self.squares[[element[1], element[2]]]
+            print('Your turn.')
+            self.printBoard()
+            selectedfriendly = self.squares[(element[1], element[2])]
             selectedfriendly.move()
             selectedfriendly.attack()
-            self.playerTurn()
-    def placeEnemy(enemy, position, self):
-        self.squares[position] = enemy
+        self.enemyTurn()
+    def placeEnemy(self, enemy, position):
+        self.squares[tuple(position)] = enemy
         self.enemies.append([enemy.name, enemy.position[0], enemy.position[1]])
-    def placeFriendly(friendly, position, self):
-        self.squares[position] = friendly
+    def placeFriendly(self, friendly, position):
+        self.squares[tuple(position)] = friendly
         self.friendlies.append([friendly.name, friendly.position[0], friendly.position[1]])
+    def printBoard(self):
+        neededSize = self.size
+        for i in range(neededSize):
+            for j in range(neededSize):
+                if self.squares[(i, j)] != '':
+                    print('|' + str(self.squares[(i, j)]), end = '|­')
+                else:
+                    print('|          |', end = '')
+            print()
     def __str__(self):
         return(self.squares)
 class Enemy:
-    def __init__(unittype, unitindex, health, stats, position, self):
-        self.unittype = unittype + str(unitindex)
+    def __init__(self, unittype, unitindex, health, stats, position, board):
+        self.unittype = unittype + ' ' + str(unitindex)
         self.name = unittype 
         self.health = health
         self.stats = stats
         self.position = position
-    def takeDamage(damage, board, self):
+        self.board = board
+    def takeDamage(self, damage, board):
         self.health = self.health - damage
         if self.health <= 0:
             self.die(board)
-    def die(board, self):
-        for element in board.enemies:
+    def __str__(self):
+        return(self.unittype)
+    def die(self):
+        for element in self.board.enemies:
             if element[0] == self:
-                board.squares[[element[1], element[2]]] = ''
-                board.enemies.remove(element)
-    def attack(board, self):
+                self.board.squares[[element[1], element[2]]] = ''
+                self.board.enemies.remove(element)
+    def attack(self):
         # if a friendly is in range attack it
         #if not, move
         friendlyplaces = []
         target = None
         closestTargetPos = None
-        minDistance = board.size
-        for element in board.friendlies:
+        minDistance = self.board.size
+        for element in self.board.friendlies:
             friendlyplaces.append([element[1], element[2]])
         for element in friendlyplaces:
-            distance = max(abs(element[0] - self.position[0], abs(element[1] - self.position[1])))
+            distance = max(abs(element[0] - self.position[0]), abs(element[1] - self.position[1]))
             if distance <= minDistance:
                 minDistance = distance
                 closestTargetPos = element
         if distance == 1:
-            target = board.squares[closestTargetPos]
+            target = self.board.squares[closestTargetPos]
             damage = hitcalcifier(self.name, target.name)
-            target.takeDamage(damage, board)
-    def move(board, self):
+            target.takeDamage(damage)
+    def move(self):
         # pseudocode! for all elements in friendlies:
         # check the distance (adjacent squares) to each one
         friendlyplaces = []
         closestTargetPos = None
-        minDistance = board.size
-        for element in board.friendlies:
+        minDistance = self.board.size
+        for element in self.board.friendlies:
             friendlyplaces.append([element[1], element[2]])
         for element in friendlyplaces:
-            distance = max(abs(element[0] - self.position[0], abs(element[1] - self.position[1])))
+            distance = max(abs(element[0] - self.position[0]), abs(element[1] - self.position[1]))
             if distance <= minDistance:
                 minDistance = distance
                 closestTargetPos = element
@@ -103,48 +118,48 @@ class Enemy:
                 endSquare[1] = self.position[1] + movement
         for element in endSquare:
             if element < 0: element = 0
-            if element > board.size -1 : element = board.size -1 #don't move off the board and break the program
-        while board.squares[endSquare] != '': # if its target is occupied then move to an adjacent valid square
+            if element > self.board.size -1 : element = self.board.size -1 #don't move off the board and break the program
+        while self.board.squares[tuple(endSquare)] != '': # if its target is occupied then move to an adjacent valid square
             i = 0
             if i%8 == 0:
                 endSquare[1] = endSquare [1] + 1
-            if board.squares[endSquare] == '':
+            if self.board.squares[endSquare] == '':
                 break
             if i%8 == 1:
                 endSquare[0] = endSquare [0] + 1
-            if board.squares[endSquare] == '':
+            if self.board.squares[endSquare] == '':
                 break
             if i%8 == 2:
                 endSquare[1] = endSquare [1] - 1  
-            if board.squares[endSquare] == '':
+            if self.board.squares[endSquare] == '':
                 break
             if i%8 == 3:
                 endSquare[1] = endSquare [1] - 1
-            if board.squares[endSquare] == '':
+            if self.board.squares[endSquare] == '':
                 break
             if i%8 == 4:
                 endSquare[0] = endSquare [0] - 1 
-            if board.squares[endSquare] == '':
+            if self.board.squares[endSquare] == '':
                 break 
             if i%8 == 5:
                 endSquare[0] = endSquare [0] - 1    
-            if board.squares[endSquare] == '':
+            if self.board.squares[endSquare] == '':
                 break              
             if i%8 == 6:
                 endSquare[1] = endSquare [1] + 1    
-            if board.squares[endSquare] == '':
+            if self.board.squares[endSquare] == '':
                 break              
             if i%8 == 7:
                 endSquare[1] = endSquare [1] + 1    
-            if board.squares[endSquare] == '':
+            if self.board.squares[endSquare] == '':
                 break                     
             else:
                 print('Enemy is blocked! It loses its move!')                 
-        board.squares[self.position] = ''
+        self.board.squares[self.position] = ''
         self.position = endSquare
-        board.squares[endSquare] = self
+        self.board.squares[endSquare] = self
 class Friendly:
-    def __init__(name, health, stats, position, weapon, self):
+    def __init__(self, name, health, stats, position, weapon, board):
         self.name = name
         self.health = health
         self.stats = stats
@@ -153,47 +168,55 @@ class Friendly:
             self.atkrange = 4
         else:
             self.atkrange = 1
-    def takeDamage(damage, board, self):
+        self.board = board
+    def takeDamage(self, damage):
         self.health = self.health - damage
         if self.health <= 0:
-            self.die(board)
-    def levelUp(newLevel, newStats, self):
+            self.die()
+    def levelUp(self, newStats):
         self.stats = newStats
         self.health = self.stats['Max Health']
-    def killEnemy(enemy, weapon, self):
+    def killEnemy(self, enemy, weapon):
         self.stats['XP'] = self.stats['XP'] + enemy.stats['XP Yield']
         weapon['Kills'] = weapon['Kills'] +1
-    def die(board, self):
-        for element in board.friendlies:
+    def die(self):
+        for element in self.board.friendlies:
             if element[0] == self.name:
-                board.squares[[element[1], element[2]]] = ''
-                board.friendlies.remove(element)
-    def attack(board, self):
-        targetSquare = map(int, input('Enter target coordinates (comma-separated): ').split(','))
-        if (abs(self.position[0] - targetSquare[1]) <= self.atkrange and abs(self[1] - targetSquare[1]) <= self.atkrange):
-            target = board.squares[targetSquare]
+                self.board.squares[[element[1], element[2]]] = ''
+                self.board.friendlies.remove(element)
+    def attack(self):
+        targetSquare = [None, None]
+        targetSquare[0], targetSquare[1] = map(int, input('Enter target coordinates (comma-separated): ').split(','))
+        targetSquare = tuple(targetSquare)
+        if (abs(self.position[0] - targetSquare[1]) <= self.atkrange and abs(self.position[1] - targetSquare[1]) <= self.atkrange):
+            target = self.board.squares[targetSquare]
             if target == '':
                 print("There's nothing on that square! You forfeit this unit's attack turn!!")
             elif type(target) == Friendly:
                 print("Friendly fire is not permitted! You forfeit this unit's attack turn!")
             else:
                 damage = hitcalcifier(self.name, target.name)
-                target.takeDamage(damage, board)
+                target.takeDamage(damage)
                 if target.health <= 0:
                     target.killEnemy(target)
         else:
             print("Out of range! You forfeit this unit's attack turn!")
-    def move(board, self):
-        startSquare = self.position
-        endSquare = map(int, input('Enter new coordinates (comma-separated): ').split(','))
+    def move(self):
+        startSquare = tuple(self.position)
+        endSquare = [None, None]
+        endSquare[0], endSquare[1] = map(int, input('Enter new coordinates (comma-separated): ').split(','))
+        tuple(endSquare)
         if (abs(startSquare[0] - endSquare[0]) <= 2 and abs(startSquare[1] - endSquare[1]) <= 2):
             self.position = endSquare
-            board.squares[startSquare] = ''
-            board.squares[endSquare] = self
+            self.board.squares[startSquare] = ''
+            self.board.squares[tuple(endSquare)] = self
+            self.board.friendlies = [self, self.position[0], self.position[1]]
         else:
             print("Invalid move! You forfeit this unit's move turn!")
+    def __str__(self):
+        return(self.name)
 def main():
-    if input('Start battle?') == 'Y':
+    if input('Start battle? ') == 'Y':
         neededSize = int(input('Enter board size: '))
         gameBoard = Board(neededSize)
         lower_bound = int(input("Enter lower reward bound: "))
@@ -203,13 +226,21 @@ def main():
         enemNum = selectedEnemies[0]
         placementList = placeEnemies(enemNum, neededSize)
         itemRewards(enemNum)
-        for i in range(enemNum):
+        for i in range(enemNum - 1):
             enemyName = str(selectedEnemies[1][i]) + str(i)
-            stats = getEnemy(selectedEnemies[1][i])
-            enemyName = Enemy(selectedEnemies[1][i], i, stats['Health'], stats, placementList[i])
-            gameBoard.placeEnemy(enemyName, )
-        for element in gameBoard.squares:
-            print(element)
+            try:
+                stats = getEnemy(selectedEnemies[1][i])
+                enemyName = Enemy(selectedEnemies[1][i], i, stats['Max Health'], stats, tuple(placementList[i]), gameBoard)
+                gameBoard.placeEnemy(enemyName, placementList[i] )
+            except FileNotFoundError:
+                print('Enemy skipped, not defined yet.')
+        for i in range(neededSize):
+            for j in range(neededSize):
+                if gameBoard.squares[(i, j)] != '':
+                    print('|' + str(gameBoard.squares[(i, j)]), end = '|­')
+                else:
+                    print('|          |', end = '')
+            print()
         friendlySelect = []
         while len(friendlySelect) < 10:
             chooseUnit = input('Choose a unit: ')
@@ -219,12 +250,14 @@ def main():
                 break
         i = 0
         while i < len(friendlySelect):
-            position = map(int, input('Enter new coordinates (comma-separated): ').split(','))
-            if gameBoard.squares['position'] == '':
+            position = [None, None]
+            position[0], position[1] = map(int, input('Deploy ' + friendlySelect[i] + ' to (comma-separated): ').split(','))
+            tuple(position)
+            if gameBoard.squares[tuple(position)] == '':
                 element = friendlySelect[i]
                 stats = getChar(element)
                 weapon = getWeap(stats['Weapon'])
-                element = Friendly(element, stats['Max Health'], stats, position, weapon)
+                element = Friendly(element, stats['Max Health'], stats, tuple(position), weapon, gameBoard)
                 gameBoard.placeFriendly(element, position)
                 i = i + 1
             else:
