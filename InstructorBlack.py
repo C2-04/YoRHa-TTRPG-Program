@@ -86,15 +86,17 @@ def hitcalcifier(Attacker, Defender):
         if stats['Level'] < minLevel:
             print('Weapon level must be higher.')
             return()
+        atk = atksts[stats['Type']] + random.randint(-2, 3) + weaponDamage
     else:
         atksts = getEnemy(Attacker)
         acc = atksts['Accuracy']
         weaponDamage = 0
+        atk = atksts['Machine']
     if len(Defender) <= 4:
         defsts = getChar(Defender)
     else:
         defsts = getEnemy(Defender)
-    atk = atksts[stats['Type']] + random.randint(-2, 3) + weaponDamage
+    
     mrl = atksts['MOR']
     dfs = defsts['Defense']
     evd = defsts['Evasion']
