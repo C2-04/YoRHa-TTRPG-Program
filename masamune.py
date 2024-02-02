@@ -3,13 +3,13 @@ from CommanderWhite import *
 from InstructorBlack import *
 def createTemplate():
     weapbase = {}
-    weapbase['name'] = "Virtuous Treaty"
-    weapbase['Slash'] = [7, 0.8, 1]
-    weapbase['Down Slash'] = [13, 0.65, 1]
-    weapbase['Spinning Slash'] = [10, 0.7, 2]
-    weapbase['One Eye Open'] = [20, 0.55, 3]
-    weapbase["Remember Me"] = [44, 0.4, 4]
-    weapbase['Type'] = '2H Sword'
+    weapbase['name'] = "Virtuous Safety"
+    weapbase['Target'] = [8, 0.9, 1]
+    weapbase['Burst'] = [8, 0.4, 1]
+    weapbase['Charge'] = [17, 0.6, 2]
+    weapbase["Spray"] = [10, 0.35, 3]
+    weapbase["Through the Eye"] = [99999, 0.15, 4]
+    weapbase['Type'] = 'Gun'
     with open("weapons/bases/"+weapbase['name']+'.throngler', 'wb') as outfile:
         pickle.dump(weapbase, outfile)
         outfile.close()
@@ -30,7 +30,7 @@ def createWeapon(name):
     with open("weapons/"+stats['ID']+'.throngler', 'wb') as outfile:
         pickle.dump(stats, outfile)
         outfile.close()
-createWeapon('Virtuous Treaty')
+createTemplate()
 def createEnemy(enemName):
     stats = {}
     stats['Machine'] = int(input('Enter machine attack: '))
