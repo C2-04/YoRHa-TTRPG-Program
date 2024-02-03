@@ -51,7 +51,6 @@ def giveGold(toGive):
     with open('inventory.data', 'wb') as outfile:
         pickle.dump(items, outfile)
         outfile.close()
-
 def takeInventory():
     with open('inventory.data', 'rb') as infile:
         items = pickle.load(infile)

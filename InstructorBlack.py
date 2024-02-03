@@ -30,6 +30,7 @@ def selectEnemies(weight):
                    "Medium Flier": 140,
                    "Explodey Boy": 10,
                    "Axe Flier": 90,
+                   "Goliath Biped" : 500,
                    "Mech Worm": 150,
                    "Gunslinger": 70,
                    }

@@ -3,7 +3,7 @@ from CommanderWhite import *
 from InstructorBlack import *
 def createTemplate():
     weapbase = {}
-    weapbase['name'] = "Virtuous Safety"
+    weapbase['name'] = "Cruel Cowardice"
     weapbase['Target'] = [8, 0.9, 1]
     weapbase['Burst'] = [8, 0.4, 1]
     weapbase['Charge'] = [17, 0.6, 2]
@@ -30,7 +30,7 @@ def createWeapon(name):
     with open("weapons/"+stats['ID']+'.throngler', 'wb') as outfile:
         pickle.dump(stats, outfile)
         outfile.close()
-createTemplate()
+
 def createEnemy(enemName):
     stats = {}
     stats['Machine'] = int(input('Enter machine attack: '))
@@ -47,3 +47,4 @@ def createEnemy(enemName):
     with open("enemies/"+enemName+'.N2', 'wb') as outfile:
         pickle.dump(stats, outfile)
         outfile.close()
+createEnemy('Goliath Biped')
