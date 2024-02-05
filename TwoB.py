@@ -15,6 +15,7 @@ class Board:
         self.turn = 0
         self.enemies = []
         self.friendlies = []
+        self.log = ""
     def nextTurn(self):
         self.playerTurn()
         if len(self.enemies) == 0:
@@ -76,6 +77,7 @@ class Enemy:
     def die(self):
         self.board.squares[self.position] = ''
         self.board.enemies.remove(self)
+        self.board.log = self.board.log + self.name + " has died. \n"
     def attack(self):
         # if a friendly is in range attack it
         #if not, move
@@ -94,6 +96,7 @@ class Enemy:
             target = self.board.squares[tuple(closestTargetPos)]
             damage = hitcalcifier(self.name, target.name)
             target.takeDamage(damage)
+            self.board.log = self.board.log + self.name + " attacked " + target.name + 'and dealt ' + str(damage) + ' damage. \n'
         else:
             self.move()
     def move(self):
@@ -163,6 +166,7 @@ class Enemy:
             else:
                 print('Enemy is blocked! It loses its move!')                 
         self.board.squares[tuple(self.position)] = ''
+        self.board.log = self.board.log + self.name + " moved from (" + str(self.position[0]) + "," + str(self.position[1]) + ') to (' +  str(endSquare([0]))+ ',' + str(endSquare[1]) +  '). \n'
         self.position = tuple(endSquare)
         self.board.squares[tuple(endSquare)] = self
 class Friendly:
@@ -195,6 +199,7 @@ class Friendly:
     def die(self):
         self.board.squares[self.position] = ''
         self.board.friendlies.remove(self)
+        self.board.log = self.board.log + self.name + " has died. \n"
     def attack(self):
         targetSquare = [None, None]
         targetSquare[0], targetSquare[1] = map(int, input('Enter target coordinates (comma-separated): ').split(','))
@@ -208,6 +213,7 @@ class Friendly:
             else:
                 damage = hitcalcifier(self.name, target.name)
                 target.takeDamage(damage)
+                self.board.log = self.board.log + self.name + " attacked " + target.name + 'and dealt ' + str(damage) + ' damage. \n'
                 if target.health <= 0:
                     self.killEnemy(target)
         else:
@@ -221,6 +227,7 @@ class Friendly:
             print("Square is blocked! You forfeit this unit's move turn!")
             return()
         if (abs(startSquare[0] - endSquare[0]) <= 2 and abs(startSquare[1] - endSquare[1]) <= 2):
+            self.board.log = self.board.log + self.name + " moved from (" + str(self.position[0]) + "," + str(self.position[1]) + ') to (' +  str(endSquare([0]))+ ',' + str(endSquare[1]) +  '). \n'
             self.position = endSquare
             self.board.squares[startSquare] = ''
             self.board.squares[tuple(endSquare)] = self
