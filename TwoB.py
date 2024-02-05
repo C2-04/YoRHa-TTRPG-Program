@@ -16,18 +16,13 @@ class Board:
         self.enemies = []
         self.friendlies = []
         self.log = ""
-    def nextTurn(self):
-        self.playerTurn()
-        if len(self.enemies) == 0:
-            exit
-        if len(self.friendlies) == 0:
-            exit
     def enemyTurn(self):
         for element in self.enemies:
             selectedenemy = element
             selectedenemy.attack()
         if len(self.friendlies) == 0:
             input('All of your units have died!')
+            print(self.log)
             exit
         self.playerTurn()
     def playerTurn(self):
@@ -39,6 +34,7 @@ class Board:
             selectedfriendly.attack()
         if len(self.enemies) == 0:
             input('Well done, you have won!')
+            print(self.log)
             exit
         self.enemyTurn()
     def placeEnemy(self, enemy, position):
@@ -280,6 +276,6 @@ def main():
                 i = i + 1
             else:
                 ('Square already occupied.')
-        gameBoard.nextTurn()
+        gameBoard.enemyTurn()
 if __name__ == "__main__":
     main()
