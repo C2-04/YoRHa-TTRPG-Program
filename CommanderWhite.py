@@ -55,11 +55,11 @@ def creatifier():
     else:
         unitName = str(unitNumber) + unittype
     try:
-        infile = open(unitName+'.YoRHa', 'r')
+        infile = open('units/unitData/' + unitName+'.YoRHa', 'r')
         print('Error: Unit already exists.')
         infile.close()
     except FileNotFoundError:
-        with open(unitName+'.YoRHa', 'wb') as outfile:
+        with open('units/unitData/' + unitName+'.YoRHa', 'wb') as outfile:
             pickle.dump(stats, outfile)
         print('Unit created successfully.')
         outfile.close()
@@ -78,7 +78,7 @@ def weaponAssign(unit, weapid):
     oldstats = getWeap(stats['Weapon'])
     oldOwner = getChar(oldstats['Owner'])
     oldOwner['Weapon'] = '00000'
-    with open(oldstats['Owner']+'.YoRHa', 'wb') as outfile: #WRITE BINARY DUMB FUCK
+    with open('units/unitData/' + oldstats['Owner']+'.YoRHa', 'wb') as outfile: #WRITE BINARY DUMB FUCK
         pickle.dump(oldOwner, outfile)
         outfile.close() 
     if stats['Weapon'] != '00000':
@@ -88,7 +88,7 @@ def weaponAssign(unit, weapid):
             pickle.dump(oldstats, outfile)
             outfile.close()
     stats['Weapon'] = weapid
-    with open(unit+'.YoRHa', 'wb') as outfile: #WRITE BINARY DUMB FUCK
+    with open('units/unitData/' + unit+'.YoRHa', 'wb') as outfile: #WRITE BINARY DUMB FUCK
         pickle.dump(stats, outfile)
         outfile.close() 
     newstats = getWeap(weapid)
@@ -120,17 +120,22 @@ def statincreasifier(derstat, stats, desiredUnit):
     if basestat >= random.randint(0, 5) + random.randint(0, 5):
         print("Yup! The relevant stat increased.")
         stats[derstat] = stats[derstat] + 1
-        with open(desiredUnit+'.YoRHa', 'wb') as outfile: #WRITE BINARY DUMB FUCK
+        with open('units/unitData/' + desiredUnit+'.YoRHa', 'wb') as outfile: #WRITE BINARY DUMB FUCK
             pickle.dump(stats, outfile)
             outfile.close() 
     else:
         print("Fuck-a-doodle-doo! The stat didn't increase.")
 
 def getChar(unitName):
-    infile = open(unitName+'.YoRHa', 'rb')
+    infile = open('units/unitData/' + unitName+'.YoRHa', 'rb')
     stats = pickle.load(infile)
     infile.close()
     return(stats)
+def getChips(unitName):
+    infile = open('units/chipsets/' + unitName+'.chips', 'rb')
+    chips = pickle.load(infile)
+    infile.close()
+    return(chips)
 def getWeap(weapid):
     infile = open("weapons/"+weapid+'.throngler', 'rb')
     stats = pickle.load(infile)
@@ -156,23 +161,23 @@ def getEnemy(unitName):
 
 def editChar(desiredUnit, stats, desiredStat, newValue):
     stats[desiredStat] = (newValue)
-    with open(desiredUnit+'.YoRHa', 'wb') as outfile: #WRITE BINARY DUMB FUCK
+    with open('units/unitData/' + desiredUnit+'.YoRHa', 'wb') as outfile: #WRITE BINARY DUMB FUCK
         pickle.dump(stats, outfile)
     print("Operation complete.")
 def registerUnit(unitName):
     offset = {'A': 0, 'B': 100, 'C': 200, 'D': 300, 'E': 400, 'G': 500, 'H': 600, 'O': 700, 'R': 800, 'S': 900}
-    with open('YoRHa Registry', 'rb') as infile:
+    with open('savedata/YoRHa Registry', 'rb') as infile:
         units = pickle.load(infile)
         infile.close()
     unitNumber = int("".join(filter(str.isdigit, unitName)))
     unitType = ("".join(filter(str.isalpha, unitName)))
     unitIndex = unitNumber + offset[unitType] - 1
     units[unitIndex] = unitName
-    with open('YoRHa Registry', 'wb') as outfile:
+    with open('savedata/YoRHa Registry', 'wb') as outfile:
         units = pickle.dump(units, outfile)
         outfile.close()
 def printTable():
-    with open('YoRHa Registry', 'rb') as infile:
+    with open('savedata/YoRHa Registry', 'rb') as infile:
         units = pickle.load(infile)
         infile.close()
     for i in range(10):
@@ -194,12 +199,12 @@ def listweapons():
             print('ID:', stats['ID'], 'Owner:', stats['Owner'], 'Name:', stats['name'],'Type:' ,stats['Type'], 'Level:', stats['Level'], 'Kills:', stats['Kills'])
             infile.close()
 def listunits():
-    with open('YoRHa Registry', 'rb') as infile:
+    with open('savedata/YoRHa Registry', 'rb') as infile:
         units = pickle.load(infile)
         infile.close()
     for element in units:
         if element != '':
-            infile = open(element+'.YoRHa', 'rb')
+            infile = open('units/unitData/' + element+'.YoRHa', 'rb')
             stats = pickle.load(infile)
             infile.close()
             print(element, 'Level:', stats['Level'])
@@ -217,14 +222,14 @@ def deleteUnit():
             if input('This unit will be permanently deleted!: ') == 'Y':
                 if input('Is this really what you want? Think of ' + unit +'! Do you really want to throw them away?') == 'Y':
                     if input('Enter the name of the unit to be deleted: ') == unit:
-                        os.remove(unit + ".YoRHa")
-                        with open('YoRHa Registry', 'rb') as infile:
+                        os.remove('units/unitData/' + unit + ".YoRHa")
+                        with open('savedata/YoRHa Registry', 'rb') as infile:
                             units = pickle.load(infile)
                             infile.close()
                         for i in range(1000):
                             if units[i] == unit:
                                 units[i] = ''
-                        with open('YoRHa Registry', 'wb') as outfile:
+                        with open('savedata/YoRHa Registry', 'wb') as outfile:
                             units = pickle.dump(units, outfile)
                             outfile.close()
                         print('Operation complete. Farewell, ' + unit +". You have served well.")
@@ -251,7 +256,7 @@ def grantXP(desiredUnit, toGrant):
             stats[levelstat] = stats[levelstat] + 1
     stats['Max Health'] = 80 + (stats["Level"] + 4)*stats['TGH']
     stats['Health'] = stats['Max Health']
-    with open(desiredUnit+'.YoRHa', 'wb') as outfile: #WRITE BINARY DUMB FUCK
+    with open('units/unitData/' + desiredUnit+'.YoRHa', 'wb') as outfile: #WRITE BINARY DUMB FUCK
         pickle.dump(stats, outfile)
     print("Operation complete.")
 

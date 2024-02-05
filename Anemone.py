@@ -14,7 +14,7 @@ def materialShop():
         selectedItem = input('Enter the item you wish to buy: ')
         if selectedItem == 'quit':
             break
-        with open('inventory.data', 'rb') as infile:
+        with open('savedata/inventory.data', 'rb') as infile:
             inventory = pickle.load(infile)
             infile.close()
         howMany = int(input('How many? '))
@@ -27,11 +27,11 @@ def materialShop():
             print('Operation complete. You have', inventory['Gold'], 'gold remaining.')
         else:
             print('Not enough gold!')
-        with open('inventory.data', 'wb') as outfile:
+        with open('savedata/inventory.data', 'wb') as outfile:
             pickle.dump(inventory, outfile)
             outfile.close()
 def addItem(item):
-    with open('inventory.data', 'rb') as infile:
+    with open('savedata/inventory.data', 'rb') as infile:
         inventory = pickle.load(infile)
         infile.close()
     howMany = 1
@@ -39,20 +39,20 @@ def addItem(item):
         inventory[item] = inventory[item] + howMany
     except KeyError:
         inventory[item] = howMany
-    with open('inventory.data', 'wb') as outfile:
+    with open('savedata/inventory.data', 'wb') as outfile:
         pickle.dump(inventory, outfile)
         outfile.close()
 def giveGold(toGive):
-    with open('inventory.data', 'rb') as infile:
+    with open('savedata/inventory.data', 'rb') as infile:
         items = pickle.load(infile)
         infile.close()
     items['Gold'] = items['Gold'] + toGive
     print('Gold:', items['Gold'])
-    with open('inventory.data', 'wb') as outfile:
+    with open('savedata/inventory.data', 'wb') as outfile:
         pickle.dump(items, outfile)
         outfile.close()
 def takeInventory():
-    with open('inventory.data', 'rb') as infile:
+    with open('savedata/inventory.data', 'rb') as infile:
         items = pickle.load(infile)
         infile.close()
     itemList = items.keys()

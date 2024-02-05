@@ -192,6 +192,7 @@ class Friendly:
         self.weap = getWeap(self.stats['Weapon'])
         for element in itemRewards(1):
             print(element, "dropped by the enemy!")
+            addItem(element)
     def die(self):
         self.board.squares[self.position] = ''
         self.board.friendlies.remove(self)
