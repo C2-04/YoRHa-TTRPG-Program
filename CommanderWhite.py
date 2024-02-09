@@ -48,12 +48,7 @@ def creatifier():
     stats["Unit Type"] = unittype
     stats['Personality'] = unitNumber
     stats["Weapon"] = '00000'
-    if unittype == "A":
-        unitName = unittype + str(unitNumber)
-    elif unittype == "G":
-        unitName = unittype + str(unitNumber)
-    else:
-        unitName = str(unitNumber) + unittype
+    unitName = str(unitNumber) + unittype
     try:
         infile = open('units/unitData/' + unitName+'.YoRHa', 'r')
         print('Error: Unit already exists.')
