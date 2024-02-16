@@ -70,18 +70,13 @@ def statifier(name, stat):
     return(stat)
 def weaponAssign(unit, weapid):
     stats = getChar(unit)
-    oldstats = getWeap(stats['Weapon'])
-    oldOwner = getChar(oldstats['Owner'])
-    oldOwner['Weapon'] = '00000'
-    with open('units/unitData/' + oldstats['Owner']+'.YoRHa', 'wb') as outfile: #WRITE BINARY DUMB FUCK
-        pickle.dump(oldOwner, outfile)
-        outfile.close() 
     if stats['Weapon'] != '00000':
         oldstats = getWeap(stats['Weapon'])
-        oldstats['Owner'] = ''
-        with open("weapons/"+stats["Weapon"]+'.throngler', 'wb') as outfile:
-            pickle.dump(oldstats, outfile)
-            outfile.close()
+        oldOwner = getChar(oldstats['Owner'])
+        oldOwner['Weapon'] = '00000'
+        with open('units/unitData/' + oldstats['Owner']+'.YoRHa', 'wb') as outfile: #WRITE BINARY DUMB FUCK
+            pickle.dump(oldOwner, outfile)
+            outfile.close() 
     stats['Weapon'] = weapid
     with open('units/unitData/' + unit+'.YoRHa', 'wb') as outfile: #WRITE BINARY DUMB FUCK
         pickle.dump(stats, outfile)

@@ -25,7 +25,7 @@ def createWeapon(name):
     print(newID, file=idFile)
     stats['ID'] = str(id).zfill(5)
     stats['Level'] = 1
-    stats['Kills'] = 2
+    stats['Kills'] = 0
     stats['Owner'] = ''
     with open("weapons/"+stats['ID']+'.throngler', 'wb') as outfile:
         pickle.dump(stats, outfile)
@@ -47,4 +47,4 @@ def createEnemy(enemName):
     with open("enemies/"+enemName+'.N2', 'wb') as outfile:
         pickle.dump(stats, outfile)
         outfile.close()
-createEnemy('Goliath Biped')
+createWeapon('YoRHa-Issue Blade')

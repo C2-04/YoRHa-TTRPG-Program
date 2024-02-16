@@ -162,7 +162,7 @@ class Enemy:
             else:
                 print('Enemy is blocked! It loses its move!')                 
         self.board.squares[tuple(self.position)] = ''
-        self.board.log = self.board.log + self.name + " moved from (" + str(self.position[0]) + "," + str(self.position[1]) + ') to (' +  str(endSquare([0]))+ ',' + str(endSquare[1]) +  '). \n'
+        self.board.log = self.board.log + self.name + " moved from (" + str(self.position[0]) + "," + str(self.position[1]) + ') to (' +  str(endSquare[0])+ ',' + str(endSquare[1]) +  '). \n'
         self.position = tuple(endSquare)
         self.board.squares[tuple(endSquare)] = self
 class Friendly:
@@ -185,6 +185,8 @@ class Friendly:
         self.stats = newStats
         self.health = self.stats['Max Health']
     def killEnemy(self, enemy):
+        for element in self.board.friendlies:
+            grantXP(element.name, enemy.stats['Yield']//2)
         grantXP(self.name, enemy.stats['Yield'])
         self.stats = getChar(self.name)
         weapKill(self.stats['Weapon'])
@@ -224,7 +226,7 @@ class Friendly:
             print("Square is blocked! You forfeit this unit's move turn!")
             return()
         if (abs(startSquare[0] - endSquare[0]) <= 2 and abs(startSquare[1] - endSquare[1]) <= 2):
-            self.board.log = self.board.log + self.name + " moved from (" + str(self.position[0]) + "," + str(self.position[1]) + ') to (' +  str(endSquare([0]))+ ',' + str(endSquare[1]) +  '). \n'
+            self.board.log = self.board.log + self.name + " moved from (" + str(self.position[0]) + "," + str(self.position[1]) + ') to (' +  str(endSquare[0])+ ',' + str(endSquare[1]) +  '). \n'
             self.position = endSquare
             self.board.squares[startSquare] = ''
             self.board.squares[tuple(endSquare)] = self
