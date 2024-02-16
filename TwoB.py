@@ -4,6 +4,7 @@ from Anemone import *
 # I was listening to the Drakengard 1 OST as I created this thing so please excuse any terrible code moments
 # It also might be a good idea to have some more input validation on this -- I really want to avoid having to scrap an entire battle because
 # a single mistyped input caused the whole thing to shit itself
+# Update, 2024-02-15: yup
 class Board:
     def __init__(self, size):
         #maybe the board should have a name
