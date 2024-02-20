@@ -80,7 +80,7 @@ def weaponAssign(unit, weapid):
     stats['Weapon'] = weapid
     with open('units/unitData/' + unit+'.YoRHa', 'wb') as outfile: #WRITE BINARY DUMB FUCK
         pickle.dump(stats, outfile)
-        outfile.close() 
+        outfile.close()
     newstats = getWeap(weapid)
     newstats['Owner'] = unit
     with open("weapons/"+stats["Weapon"]+'.throngler', 'wb') as outfile:
@@ -202,8 +202,20 @@ def listunits():
 def printStats(unit):
     stats = getChar(unit)
     statlist = stats.keys()
-    for element in statlist:
-        print(element,':', stats[element], end = '   ')
+    k = list(statlist)
+    for i in range(5):
+        element = k[i]
+        print('{:^15}'.format(element + ': ' +str(stats[element])), sep = '', end = ' ')
+        for j in range (1, 4):
+            k = list(statlist)
+            element = k[4 + 3*i + j]
+            print('{:^15}'.format(element + ': ' +str(stats[element])), sep = '', end = ' ')
+        print()
+    print()
+    for l in range(21, 26):
+        element = k[l]
+        print('{:^15}'.format(element + ': ' +str(stats[element])), sep = '', end = ' ')
+    print('{:^15}'.format('Equipped Weapon:' + ' ' +str(stats[k[28]])), sep = '', end = ' ')
     print()
 def deleteUnit():
     unit = input('Enter the name of the unit to be deleted: ')
