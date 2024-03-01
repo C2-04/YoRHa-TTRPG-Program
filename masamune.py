@@ -47,4 +47,3 @@ def createEnemy(enemName):
     with open("enemies/"+enemName+'.N2', 'wb') as outfile:
         pickle.dump(stats, outfile)
         outfile.close()
-createWeapon('YoRHa-Issue Blade')
