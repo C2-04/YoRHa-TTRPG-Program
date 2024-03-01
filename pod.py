@@ -5,6 +5,7 @@ from masamune import *
 from Anemone import *
 from TwoB import *
 from tkinter import *
+import tkinter.ttk as ttk
 root = Tk()
 root.geometry("1000x1000")
 root.configure(background="#c8c6ae")
