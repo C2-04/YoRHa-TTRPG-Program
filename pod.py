@@ -17,6 +17,7 @@ def makeUnitList():
         result = listbox.get(selected, selected)
         print(result[0])
         printStats(result[0])
+        return result(0)
     listbox = Listbox(root)  
     with open('savedata/YoRHa Registry', 'rb') as infile:
         units = pickle.load(infile)
@@ -29,7 +30,6 @@ def makeUnitList():
     bttn = Button(frame, text = "Submit", command = retrieve)
     bttn.pack(side= "bottom")
     listbox.pack()
-        
 leftframe = Frame(root)
 leftframe.pack(side=LEFT)
 leftframe.configure(background="#c8c6ae")

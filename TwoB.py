@@ -46,16 +46,21 @@ class Board:
         self.friendlies.append(friendly)
     def printBoard(self):
         neededSize = self.size
+        print('     ', end = '')
         for i in range(neededSize):
             print('|'+ '{:^15}'.format(str(i)) +'|', end = '')
         print()
+        print('     '+ '—————————————————'*neededSize) 
         for i in range(neededSize):
+            print('{:^5}'.format(str(i)), end = '')
             for j in range(neededSize):
                 if self.squares[(i, j)] != '':
                     print('|' + '{:^15}'.format(str(self.squares[(i, j)])+ ' '+ str(self.squares[(i, j)].health)) + '|', end='')
                 else:
                     print('|               |', end = '')
-            print('   ' + str(i))
+            print('{:^5}'.format(str(i)))
+            print('     '+ '—————————————————'*neededSize)    
+            
     def __str__(self):
         return(self.squares)
 class Enemy:
@@ -97,7 +102,6 @@ class Enemy:
         else:
             self.move()
     def move(self):
-        # pseudocode! for all elements in friendlies:
         # check the distance (adjacent squares) to each one
         friendlyplaces = []
         closestTargetPos = None
