@@ -48,7 +48,7 @@ def giveGold(toGive):
         infile.close()
     items['Gold'] = items['Gold'] + toGive
     print('Gold:', items['Gold'])
-    with open('savedata/', 'wb') as outfile:
+    with open('savedata/inventory.data', 'wb') as outfile:
         pickle.dump(items, outfile)
         outfile.close()
 def takeInventory():
