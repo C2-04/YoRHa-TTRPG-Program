@@ -98,7 +98,7 @@ class Enemy:
             target = self.board.squares[tuple(closestTargetPos)]
             damage = hitcalcifier(self.name, target.name)
             target.takeDamage(damage)
-            self.board.log = self.board.log + self.name + " attacked " + target.name + 'and dealt ' + str(damage) + ' damage. \n'
+            self.board.log = self.board.log + self.name + " attacked " + target.name + ' and dealt ' + str(damage) + ' damage. \n'
         else:
             self.move()
     def move(self):
@@ -221,7 +221,7 @@ class Friendly:
             else:
                 damage = hitcalcifier(self.name, target.name)
                 target.takeDamage(damage)
-                self.board.log = self.board.log + self.name + " attacked " + target.name + 'and dealt ' + str(damage) + ' damage. \n'
+                self.board.log = self.board.log + self.name + " attacked " + target.name + ' and dealt ' + str(damage) + ' damage. \n'
                 if target.health <= 0:
                     self.killEnemy(target)
         else:
