@@ -3,13 +3,12 @@ from CommanderWhite import *
 from InstructorBlack import *
 def createTemplate():
     weapbase = {}
-    weapbase['name'] = "Cruel Cowardice"
-    weapbase['Target'] = [8, 0.9, 1]
-    weapbase['Burst'] = [8, 0.4, 1]
-    weapbase['Charge'] = [17, 0.6, 2]
-    weapbase["Spray"] = [10, 0.35, 3]
-    weapbase["Through the Eye"] = [99999, 0.15, 4]
-    weapbase['Type'] = 'Gun'
+    weapbase['name'] = "Abnegation"
+    weapbase['Slash'] = [7, 0.9, 1]
+    weapbase['Flying Strike'] = [8, 0.4, 2]
+    weapbase["Protective Coat"] = [0, 1, 3]
+    weapbase["On the White Lines"] = [13, 0.9, 4]
+    weapbase['Type'] = '1H Sword'
     with open("weapons/bases/"+weapbase['name']+'.throngler', 'wb') as outfile:
         pickle.dump(weapbase, outfile)
         outfile.close()
