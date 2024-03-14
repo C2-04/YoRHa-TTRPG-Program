@@ -229,6 +229,7 @@ class Friendly:
     def move(self):
         startSquare = tuple(self.position)
         endSquare = [None, None]
+        print(self.name + "'s turn.")
         endSquare[0], endSquare[1] = map(int, input('Enter new coordinates (comma-separated): ').split(','))
         tuple(endSquare)
         if self.board.squares[tuple(endSquare)] != '':

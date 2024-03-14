@@ -258,9 +258,10 @@ def grantXP(desiredUnit, toGrant):
             stats[levelstat] = stats[levelstat] + 1
     stats['Max Health'] = 80 + (stats["Level"] + 4)*stats['TGH']
     stats['Health'] = stats['Max Health']
+    print(str(desiredUnit) + ' gained ' + str(toGrant) + ' XP.')
     with open('units/unitData/' + desiredUnit+'.YoRHa', 'wb') as outfile: #WRITE BINARY DUMB FUCK
         pickle.dump(stats, outfile)
-    print("Operation complete.")
+   
 
 def main():
     mode = None
