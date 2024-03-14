@@ -165,14 +165,16 @@ class Enemy:
             if self.board.squares[tuple(endSquare)] == '':
                 break                     
             else:
-                print('Enemy is blocked! It loses its move!')    
+                print('Enemy is blocked! It loses its move!')
+                endSquare = self.position
+                break
         try:
             self.board.squares[tuple(self.position)] = ''
             self.board.log = self.board.log + self.name + " moved from (" + str(self.position[0]) + "," + str(self.position[1]) + ') to (' +  str(endSquare[0])+ ',' + str(endSquare[1]) +  '). \n'
             self.position = tuple(endSquare)
             self.board.squares[tuple(endSquare)] = self
         except KeyError:
-            print('Enemy is blocked! It loses its move!')
+            pass
         
 class Friendly:
     def __init__(self, name, health, stats, position, weapon, board):
