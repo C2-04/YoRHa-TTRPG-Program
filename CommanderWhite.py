@@ -278,6 +278,7 @@ def main():
         if mode == "editunit":
             desiredUnit = input("Enter the name of the unit you wish to test: ")
             desiredEditUnitStats = getChar(desiredUnit)
+            print(desiredEditUnitStats)
             desiredEditStat = input("Enter the stat you wish to edit: ")
             newValue = input("Enter the new value for the stat: ")
             editChar(desiredUnit, desiredEditUnitStats, desiredEditStat, newValue)
