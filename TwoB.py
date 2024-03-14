@@ -165,7 +165,7 @@ class Enemy:
             if self.board.squares[tuple(endSquare)] == '':
                 break                     
             else:
-                print('Enemy is blocked! It loses its move!')
+                print(self.name, 'is blocked! It loses its move!')
                 endSquare = self.position
                 break
         try:
@@ -203,6 +203,8 @@ class Friendly:
         weapKill(self.stats['Weapon'])
         statincreasifier(self.weapon['Type'], self.stats, self.name)
         self.weap = getWeap(self.stats['Weapon'])
+        if enemy.name == "Gth Biped":
+            print((rareWards(1))[1], "dropped by the enemy!")
         for element in itemRewards(1):
             print(element, "dropped by the enemy!")
             addItem(element)

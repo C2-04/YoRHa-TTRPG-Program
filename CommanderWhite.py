@@ -108,7 +108,7 @@ def statincreasifier(derstat, stats, desiredUnit):
     targetstat = derstatToBasestat[derstat]
     basestat = stats[targetstat]
     if basestat >= random.randint(0, 5) + random.randint(0, 5):
-        print("Yup! The relevant stat increased.")
+        print(derstat, 'increased to', stats[derstat] + 1)
         stats[derstat] = stats[derstat] + 1
         with open('units/unitData/' + desiredUnit+'.YoRHa', 'wb') as outfile: #WRITE BINARY DUMB FUCK
             pickle.dump(stats, outfile)

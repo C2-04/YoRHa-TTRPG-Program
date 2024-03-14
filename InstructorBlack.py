@@ -67,6 +67,12 @@ def itemRewards(weight):
         else:
             rewardList.append("Machine Core")
     return(rewardList)
+def rareWards(weight):
+    rewardList = []
+    for i in range(weight):
+        itemRNG = random.random()
+        rewardList.append(random.choice(["Memory Alloy", "Machine Arm", "Machine Leg", 'Machine Torso', "Machine Head", "Machine Core"]))
+    return(rewardList)
 
 def hitcalcifier(Attacker, Defender):
     if len(Attacker) <= 4:
