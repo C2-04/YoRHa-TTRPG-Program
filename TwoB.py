@@ -128,8 +128,8 @@ class Enemy:
             else:
                 endSquare[1] = self.position[1] + movement
         for element in endSquare:
-            if element < 0: element = 0
-            if element > self.board.size -1 : element = self.board.size -1 #don't move off the board and break the program
+            if element < 1: element = 1
+            if element > self.board.size -2 : element = self.board.size -2 #don't move off the board and break the program
         while self.board.squares[tuple(endSquare)] != '': # if its target is occupied then move to an adjacent valid square
             i = 0
             if i%8 == 0:
