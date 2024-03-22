@@ -103,6 +103,9 @@ def hitcalcifier(Attacker, Defender):
     evd = defsts['Evasion']
     if atksts['Unit Type'] == 'B':
         atk = atk + 3
+    if atksts['Unit Type'] == 'A':
+        atksts['1H Sword'] = atksts['1H Sword']+6
+        atksts['2H Sword'] = atksts['2H Sword']+6
     if defsts['Unit Type'] == 'D':
         dfs = dfs+ 3
     print('Chance to hit: '+ (str(round(acc*(1 - evd)*100))) + '%')

@@ -17,6 +17,7 @@ class Board:
         self.enemies = []
         self.friendlies = []
         self.log = ""
+        self.reward = 0
     def enemyTurn(self):
         for element in self.enemies:
             selectedenemy = element
@@ -36,7 +37,8 @@ class Board:
         if len(self.enemies) == 0:
             input('Well done, you have won!')
             print(self.log)
-            exit
+            giveGold(self.reward)
+            exit()
         self.enemyTurn()
     def placeEnemy(self, enemy, position):
         self.squares[tuple(position)] = enemy
@@ -130,44 +132,9 @@ class Enemy:
         for element in endSquare:
             if element < 1: element = 1
             if element > self.board.size -2 : element = self.board.size -2 #don't move off the board and break the program
-        while self.board.squares[tuple(endSquare)] != '': # if its target is occupied then move to an adjacent valid square
-            i = 0
-            if i%8 == 0:
-                endSquare[1] = endSquare [1] + 1
-            if self.board.squares[tuple(endSquare)] == '':
-                break
-            if i%8 == 1:
-                endSquare[0] = endSquare [0] + 1
-            if self.board.squares[tuple(endSquare)] == '':
-                break
-            if i%8 == 2:
-                endSquare[1] = endSquare [1] - 1  
-            if self.board.squares[tuple(endSquare)] == '':
-                break
-            if i%8 == 3:
-                endSquare[1] = endSquare [1] - 1
-            if self.board.squares[tuple(endSquare)] == '':
-                break
-            if i%8 == 4:
-                endSquare[0] = endSquare [0] - 1 
-            if self.board.squares[tuple(endSquare)] == '':
-                break 
-            if i%8 == 5:
-                endSquare[0] = endSquare [0] - 1    
-            if self.board.squares[tuple(endSquare)] == '':
-                break              
-            if i%8 == 6:
-                endSquare[1] = endSquare [1] + 1    
-            if self.board.squares[tuple(endSquare)] == '':
-                break              
-            if i%8 == 7:
-                endSquare[1] = endSquare [1] + 1    
-            if self.board.squares[tuple(endSquare)] == '':
-                break                     
-            else:
+            if self.board.squares[tuple(endSquare)] != '':       
                 print(self.name, 'is blocked! It loses its move!')
                 endSquare = self.position
-                break
         try:
             self.board.squares[tuple(self.position)] = ''
             self.board.log = self.board.log + self.name + " moved from (" + str(self.position[0]) + "," + str(self.position[1]) + ') to (' +  str(endSquare[0])+ ',' + str(endSquare[1]) +  '). \n'
@@ -256,6 +223,7 @@ def main():
         lower_bound = int(input("Enter lower reward bound: "))
         upper_bound = int(input("Enter upper reward bound: "))
         weight = calculateReward(lower_bound, upper_bound)
+        gameBoard.reward = weight
         selectedEnemies = selectEnemies(weight)
         enemNum = selectedEnemies[0]
         placementList = placeEnemies(enemNum, neededSize)
@@ -281,16 +249,19 @@ def main():
             position = [None, None]
             try:
                 position[0], position[1] = map(int, input('Deploy ' + friendlySelect[i] + ' to (comma-separated): ').split(','))
+                tuple(position)
+                if gameBoard.squares[tuple(position)] == '':
+                    element = friendlySelect[i]
+                    stats = getChar(element)
+                    i = i + 1
+                    if stats != None:
+                        weapon = getWeap(stats['Weapon'])
+                        element = Friendly(element, stats['Max Health'], stats, tuple(position), weapon, gameBoard)
+                        gameBoard.placeFriendly(element, position)
+                    else:
+                        print("Skipping unit", element)
             except ValueError:
-                print('What?')
-            tuple(position)
-            if gameBoard.squares[tuple(position)] == '':
-                element = friendlySelect[i]
-                stats = getChar(element)
-                weapon = getWeap(stats['Weapon'])
-                element = Friendly(element, stats['Max Health'], stats, tuple(position), weapon, gameBoard)
-                gameBoard.placeFriendly(element, position)
-                i = i + 1
+                print('Not a legal square. Try that again, please.')
             else:
                 ('Square already occupied.')
         gameBoard.enemyTurn()

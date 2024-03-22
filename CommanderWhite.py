@@ -117,10 +117,15 @@ def statincreasifier(derstat, stats, desiredUnit):
         print("Fuck-a-doodle-doo! The stat didn't increase.")
 
 def getChar(unitName):
-    infile = open('units/unitData/' + unitName+'.YoRHa', 'rb')
-    stats = pickle.load(infile)
-    infile.close()
-    return(stats)
+    try:
+        infile = open('units/unitData/' + unitName+'.YoRHa', 'rb')
+        stats = pickle.load(infile)
+        infile.close()
+        return(stats)
+    except FileNotFoundError:
+        print("Unit", unitName, "not found! Operation cancelled.")
+    
+    
 def getChips(unitName):
     infile = open('units/chipsets/' + unitName+'.chips', 'rb')
     chips = pickle.load(infile)
