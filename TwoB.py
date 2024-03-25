@@ -181,39 +181,45 @@ class Friendly:
         self.board.log = self.board.log + self.name + " has died. \n"
     def attack(self):
         targetSquare = [None, None]
-        targetSquare[0], targetSquare[1] = map(int, input('Enter target coordinates (comma-separated): ').split(','))
-        targetSquare = tuple(targetSquare)
-        if (abs(self.position[0] - targetSquare[0]) <= self.atkrange and abs(self.position[1] - targetSquare[1]) <= self.atkrange):
-            target = self.board.squares[targetSquare]
-            if target == '':
-                print("There's nothing on that square! You forfeit this unit's attack turn!!")
-            elif type(target) == Friendly:
-                print("Friendly fire is not permitted! You forfeit this unit's attack turn!")
+        try:
+            targetSquare[0], targetSquare[1] = map(int, input('Enter target coordinates (comma-separated): ').split(','))
+            targetSquare = tuple(targetSquare)
+            if (abs(self.position[0] - targetSquare[0]) <= self.atkrange and abs(self.position[1] - targetSquare[1]) <= self.atkrange):
+                target = self.board.squares[targetSquare]
+                if target == '':
+                    print("There's nothing on that square! You forfeit this unit's attack turn!!")
+                elif type(target) == Friendly:
+                    print("Friendly fire is not permitted! You forfeit this unit's attack turn!")
+                else:
+                    damage = hitcalcifier(self.name, target.name)
+                    target.takeDamage(damage)
+                    self.board.log = self.board.log + self.name + " attacked " + target.name + ' and dealt ' + str(damage) + ' damage. \n'
+                    if target.health <= 0:
+                        self.killEnemy(target)
             else:
-                damage = hitcalcifier(self.name, target.name)
-                target.takeDamage(damage)
-                self.board.log = self.board.log + self.name + " attacked " + target.name + ' and dealt ' + str(damage) + ' damage. \n'
-                if target.health <= 0:
-                    self.killEnemy(target)
-        else:
-            print("Out of range! You forfeit this unit's attack turn!")
+                print("Out of range! You forfeit this unit's attack turn!")
+        except ValueError:
+            print("You did something wrong and in order to stop the program from crashing you lost your turn. You are bad and you should feel bad.")
     def move(self):
         startSquare = tuple(self.position)
         endSquare = [None, None]
         print(self.name + "'s turn.")
-        endSquare[0], endSquare[1] = map(int, input('Enter new coordinates (comma-separated): ').split(','))
-        tuple(endSquare)
-        if self.board.squares[tuple(endSquare)] != '':
-            print("Square is blocked! You forfeit this unit's move turn!")
-            return()
-        if (abs(startSquare[0] - endSquare[0]) <= 2 and abs(startSquare[1] - endSquare[1]) <= 2):
-            self.board.log = self.board.log + self.name + " moved from (" + str(self.position[0]) + "," + str(self.position[1]) + ') to (' +  str(endSquare[0])+ ',' + str(endSquare[1]) +  '). \n'
-            self.position = endSquare
-            self.board.squares[startSquare] = ''
-            self.board.squares[tuple(endSquare)] = self
-            self.board.printBoard()
-        else:
-            print("Invalid move! You forfeit this unit's move turn!")
+        try:
+            endSquare[0], endSquare[1] = map(int, input('Enter new coordinates (comma-separated): ').split(','))
+            tuple(endSquare)
+            if self.board.squares[tuple(endSquare)] != '':
+                print("Square is blocked! You forfeit this unit's move turn!")
+                return()
+            if (abs(startSquare[0] - endSquare[0]) <= 2 and abs(startSquare[1] - endSquare[1]) <= 2):
+                self.board.log = self.board.log + self.name + " moved from (" + str(self.position[0]) + "," + str(self.position[1]) + ') to (' +  str(endSquare[0])+ ',' + str(endSquare[1]) +  '). \n'
+                self.position = endSquare
+                self.board.squares[startSquare] = ''
+                self.board.squares[tuple(endSquare)] = self
+                self.board.printBoard()
+            else:
+                print("Invalid move! You forfeit this unit's move turn!")
+        except ValueError:
+            print("You did something wrong and in order to stop the program from crashing you lost your turn. You are bad and you should feel bad.")
     def __str__(self):
         return(self.name)
 def main():

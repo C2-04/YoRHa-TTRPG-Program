@@ -3,12 +3,12 @@ from CommanderWhite import *
 from InstructorBlack import *
 def createTemplate():
     weapbase = {}
-    weapbase['name'] = "Abnegation"
-    weapbase['Slash'] = [7, 0.9, 1]
-    weapbase['Flying Strike'] = [8, 0.4, 2]
-    weapbase["Protective Coat"] = [0, 1, 3]
-    weapbase["On the White Lines"] = [13, 0.9, 4]
-    weapbase['Type'] = '1H Sword'
+    weapbase['name'] = "YoRHa-Issue Rifle"
+    weapbase['Shot'] = [7, 0.9, 1]
+    weapbase['Targeted Shot'] = [8, 1, 2]
+    weapbase["Scoped Shot"] = [12, 1, 3]
+    weapbase["Desperate Burst"] = [11, 0.6, 4]
+    weapbase['Type'] = 'Gun'
     with open("weapons/bases/"+weapbase['name']+'.throngler', 'wb') as outfile:
         pickle.dump(weapbase, outfile)
         outfile.close()
@@ -29,7 +29,8 @@ def createWeapon(name):
     with open("weapons/"+stats['ID']+'.throngler', 'wb') as outfile:
         pickle.dump(stats, outfile)
         outfile.close()
-
+createTemplate()
+createWeapon("YoRHa-Issue Rifle")
 def createEnemy(enemName):
     stats = {}
     stats['Machine'] = int(input('Enter machine attack: '))

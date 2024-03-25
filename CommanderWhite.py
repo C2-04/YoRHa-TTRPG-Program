@@ -153,7 +153,28 @@ def getEnemy(unitName):
     stats = pickle.load(infile)
     infile.close()
     return(stats)
-
+def convert():
+    toConvert = input('Enter the unit to be converted: ')
+    newType = input('Enter the type to convert them to: ')
+    stats = getChar(toConvert)
+    stats['Unit Type'] = newType
+    newName = toConvert[:-1]
+    newName = newName + newType
+    with open('units/unitData/' + newName+'.YoRHa', 'wb') as outfile:
+        pickle.dump(stats, outfile)
+    print('Unit converted successfully.')
+    outfile.close()
+    registerUnit(newName)
+    os.remove('units/unitData/' + toConvert + ".YoRHa")
+    with open('savedata/YoRHa Registry', 'rb') as infile:
+        units = pickle.load(infile)
+        infile.close()
+    for i in range(1000):
+        if units[i] == toConvert:
+            units[i] = ''
+    with open('savedata/YoRHa Registry', 'wb') as outfile:
+        units = pickle.dump(units, outfile)
+        outfile.close()
 def editChar(desiredUnit, stats, desiredStat, newValue):
     stats[desiredStat] = (newValue)
     with open('units/unitData/' + desiredUnit+'.YoRHa', 'wb') as outfile: #WRITE BINARY DUMB FUCK
@@ -271,7 +292,7 @@ def grantXP(desiredUnit, toGrant):
 def main():
     mode = None
     while mode != "quit":
-        mode = input("Enter the needed operation (create, listweap, listunit, printCube, printUnit, editunit, register, assignWeap, delete, quit): ")
+        mode = input("Enter the needed operation (create, listweap, listunit, printCube, printUnit, editunit, register, assignWeap, delete, convert, quit): ")
         if mode == "create":
             creatifier()
         if mode == 'listweap':
@@ -297,5 +318,7 @@ def main():
             weaponAssign(unit, weapid)
         if mode == 'delete':
             deleteUnit()
+        if mode == "convert":
+            convert()
 if __name__ == "__main__":
     main()
