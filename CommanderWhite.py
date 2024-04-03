@@ -73,10 +73,13 @@ def weaponAssign(unit, weapid):
     if stats['Weapon'] != '00000':
         oldstats = getWeap(stats['Weapon'])
         oldOwner = getChar(oldstats['Owner'])
-        oldOwner['Weapon'] = '00000'
-        with open('units/unitData/' + oldstats['Owner']+'.YoRHa', 'wb') as outfile: #WRITE BINARY DUMB FUCK
-            pickle.dump(oldOwner, outfile)
-            outfile.close() 
+        try:
+            oldOwner['Weapon'] = '00000'
+            with open('units/unitData/' + oldstats['Owner']+'.YoRHa', 'wb') as outfile: #WRITE BINARY DUMB FUCK
+                pickle.dump(oldOwner, outfile)
+                outfile.close()
+        except TypeError:
+            print("Old owner must have ceased to exist.")
     stats['Weapon'] = weapid
     with open('units/unitData/' + unit+'.YoRHa', 'wb') as outfile: #WRITE BINARY DUMB FUCK
         pickle.dump(stats, outfile)

@@ -42,6 +42,14 @@ def addItem(item):
     with open('savedata/inventory.data', 'wb') as outfile:
         pickle.dump(inventory, outfile)
         outfile.close()
+def eraseItem(item):
+    with open('savedata/inventory.data', 'rb') as infile:
+        inventory = pickle.load(infile)
+        infile.close()
+    inventory[item] = 0
+    with open('savedata/inventory.data', 'wb') as outfile:
+        pickle.dump(inventory, outfile)
+        outfile.close()
 def giveGold(toGive):
     with open('savedata/inventory.data', 'rb') as infile:
         items = pickle.load(infile)
@@ -61,12 +69,14 @@ def takeInventory():
 def main():
     mode = None
     while mode != 'quit':
-        mode = input('What do you need? shop, stock, give, quit: ')
+        mode = input('What do you need? shop, stock, give, trash, quit: ')
         if mode == 'shop':
             materialShop()
         if mode == 'stock':
             takeInventory()
         if mode == 'give':
             giveGold(int(input('Enter the amount of gold you wish to give: ')))
+        if mode == 'trash':
+            eraseItem(input('Enter the item stack you wish to trash: '))
 if __name__ == "__main__":
     main()
