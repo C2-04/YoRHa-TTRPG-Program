@@ -171,7 +171,7 @@ class Friendly:
         statincreasifier(self.weapon['Type'], self.stats, self.name)
         self.weap = getWeap(self.stats['Weapon'])
         if enemy.name == "Gth Biped":
-            print((rareWards(1))[1], "dropped by the enemy!")
+            print((rareWards(1))[0], "dropped by the enemy!")
         for element in itemRewards(1):
             print(element, "dropped by the enemy!")
             addItem(element)
