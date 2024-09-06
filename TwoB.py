@@ -5,6 +5,7 @@ from Anemone import *
 # It also might be a good idea to have some more input validation on this -- I really want to avoid having to scrap an entire battle because
 # a single mistyped input caused the whole thing to shit itself
 # Update, 2024-02-15: yup
+# to do, 2024-09-06: Fix the "Invisible YoRHa/Machines" thing
 class Board:
     def __init__(self, size):
         #maybe the board should have a name
@@ -133,6 +134,8 @@ class Enemy:
             for element in endSquare:
                 if element < 1: element = 1
                 if element > self.board.size -2 : element = self.board.size -2 #don't move off the board and break the program
+                if self.board.squares[tuple(endSquare)] != '':       
+                    endSquare = self.position # QUIT JUMPING ON MY YoRHa UNITS
             try:
                 self.board.squares[tuple(self.position)] = ''
                 self.board.log = self.board.log + self.name + " moved from (" + str(self.position[0]) + "," + str(self.position[1]) + ') to (' +  str(endSquare[0])+ ',' + str(endSquare[1]) +  '). \n'
