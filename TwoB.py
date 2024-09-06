@@ -133,15 +133,6 @@ class Enemy:
             for element in endSquare:
                 if element < 1: element = 1
                 if element > self.board.size -2 : element = self.board.size -2 #don't move off the board and break the program
-                if self.board.squares[tuple(endSquare)] != '':       
-                    endSquare = self.position
-                    target = self.board.squares[tuple(closestTargetPos)]
-                    try:
-                        damage = hitcalcifier(self.name, target.name)
-                        target.takeDamage(damage)
-                        self.board.log = self.board.log + self.name + " attacked " + target.name + ' and dealt ' + str(damage) + ' damage. \n'
-                    except AttributeError:
-                        print("Stop, stop! They're already dead!")
             try:
                 self.board.squares[tuple(self.position)] = ''
                 self.board.log = self.board.log + self.name + " moved from (" + str(self.position[0]) + "," + str(self.position[1]) + ') to (' +  str(endSquare[0])+ ',' + str(endSquare[1]) +  '). \n'
@@ -149,6 +140,20 @@ class Enemy:
                 self.board.squares[tuple(endSquare)] = self
             except KeyError:
                 pass
+        #recalculate distance. if adjacent to YoRHa, attack it
+        for element in friendlyplaces:
+            distance = max(abs(element[0] - self.position[0]), abs(element[1] - self.position[1]))
+            if distance <= minDistance:
+                minDistance = distance
+                closestTargetPos = element
+        if minDistance == 1:       
+            target = self.board.squares[tuple(closestTargetPos)]
+            try:
+                damage = hitcalcifier(self.name, target.name)
+                target.takeDamage(damage)
+                self.board.log = self.board.log + self.name + " attacked " + target.name + ' and dealt ' + str(damage) + ' damage. \n'
+            except AttributeError:
+                print("Stop, stop! They're already dead!")
         
 class Friendly:
     def __init__(self, name, health, stats, position, weapon, board):
