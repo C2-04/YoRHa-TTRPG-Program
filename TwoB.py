@@ -115,33 +115,40 @@ class Enemy:
             if distance <= minDistance:
                 minDistance = distance
                 closestTargetPos = element
-        movement = self.stats['Movement']
+        movement = 1
         # then attempt to move to the closest one
-        endSquare = [None, None]
-        if minDistance <= movement:
-            endSquare = list(closestTargetPos)
-        else:
-            if closestTargetPos[0] < self.position[0]:
-                endSquare[0] = self.position[0] - movement
+        for i in range(self.stats['Movement']):
+            endSquare = [None, None]
+            if minDistance <= movement:
+                endSquare = list(closestTargetPos)
             else:
-                endSquare[0] = self.position[0] + movement
-            if closestTargetPos[1] < self.position[1]:
-                endSquare[1] = self.position[1] - movement
-            else:
-                endSquare[1] = self.position[1] + movement
-        for element in endSquare:
-            if element < 1: element = 1
-            if element > self.board.size -2 : element = self.board.size -2 #don't move off the board and break the program
-            if self.board.squares[tuple(endSquare)] != '':       
-                print(self.name, 'is blocked! It loses its move!')
-                endSquare = self.position
-        try:
-            self.board.squares[tuple(self.position)] = ''
-            self.board.log = self.board.log + self.name + " moved from (" + str(self.position[0]) + "," + str(self.position[1]) + ') to (' +  str(endSquare[0])+ ',' + str(endSquare[1]) +  '). \n'
-            self.position = tuple(endSquare)
-            self.board.squares[tuple(endSquare)] = self
-        except KeyError:
-            pass
+                if closestTargetPos[0] < self.position[0]:
+                    endSquare[0] = self.position[0] - movement
+                else:
+                    endSquare[0] = self.position[0] + movement
+                if closestTargetPos[1] < self.position[1]:
+                    endSquare[1] = self.position[1] - movement
+                else:
+                    endSquare[1] = self.position[1] + movement
+            for element in endSquare:
+                if element < 1: element = 1
+                if element > self.board.size -2 : element = self.board.size -2 #don't move off the board and break the program
+                if self.board.squares[tuple(endSquare)] != '':       
+                    endSquare = self.position
+                    target = self.board.squares[tuple(closestTargetPos)]
+                    try:
+                        damage = hitcalcifier(self.name, target.name)
+                        target.takeDamage(damage)
+                        self.board.log = self.board.log + self.name + " attacked " + target.name + ' and dealt ' + str(damage) + ' damage. \n'
+                    except AttributeError:
+                        print("Stop, stop! They're already dead!")
+            try:
+                self.board.squares[tuple(self.position)] = ''
+                self.board.log = self.board.log + self.name + " moved from (" + str(self.position[0]) + "," + str(self.position[1]) + ') to (' +  str(endSquare[0])+ ',' + str(endSquare[1]) +  '). \n'
+                self.position = tuple(endSquare)
+                self.board.squares[tuple(endSquare)] = self
+            except KeyError:
+                pass
         
 class Friendly:
     def __init__(self, name, health, stats, position, weapon, board):
@@ -176,9 +183,13 @@ class Friendly:
             print(element, "dropped by the enemy!")
             addItem(element)
     def die(self):
-        self.board.squares[self.position] = ''
+        self.board.squares[tuple(self.position)] = ''
         self.board.friendlies.remove(self)
+        print(self.name + " has died. \n")
         self.board.log = self.board.log + self.name + " has died. \n"
+        if len(self.board.friendlies) == 0:
+            input("All of your units have died. Defeat!")
+            exit()
     def attack(self):
         targetSquare = [None, None]
         try:
