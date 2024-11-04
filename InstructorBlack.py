@@ -88,6 +88,7 @@ def hitcalcifier(Attacker, Defender):
             print('Weapon level must be higher.')
             return()
         atk = atksts[stats['Type']] + random.randint(-2, 3) + weaponDamage
+ 
     else:
         atksts = getEnemy(Attacker)
         acc = atksts['Accuracy']

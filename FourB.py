@@ -46,8 +46,8 @@ class Board:
                     enemyName = str(selectedEnemies[1][i]) + str(i)
                     try:
                         stats = getEnemy(selectedEnemies[1][i])
-                        enemyName = Enemy(selectedEnemies[1][i], stats['Max Health'], stats, tuple(placementList[i]), self.board)
-                        self.board.placeEnemy(enemyName, placementList[i] )
+                        enemyName = Enemy(selectedEnemies[1][i], stats['Max Health'], stats, tuple(placementList[i]), gameBoard)
+                        gameBoard.placeEnemy(enemyName, placementList[i] )
                     except FileNotFoundError:
                         pass
         self.enemyTurn()
@@ -77,7 +77,7 @@ class Board:
     def __str__(self):
         return(self.squares)
 class Enemy:
-    def __init__(self, unittype, health, stats, position, board):
+    def __init__(self, unittype, health, stats, position,board):
         self.name = unittype 
         self.health = health
         self.stats = stats
@@ -207,7 +207,7 @@ class Friendly:
         self.board.friendlies.remove(self)
         print(self.name + " has died. \n")
         if len(self.board.friendlies) == 0:
-            input("Game over! You killed", self.board.score, "machines!")
+            input("Game over! You killed " + str(self.board.score) + " machines!")
             giveGold(self.board.score*100)
             exit()
     def attack(self):
@@ -222,11 +222,14 @@ class Friendly:
                 elif type(target) == Friendly:
                     print("Friendly fire is not permitted! You forfeit this unit's attack turn!")
                 else:
-                    damage = hitcalcifier(self.name, target.name)
-                    target.takeDamage(damage)
-                    self.board.log = self.board.log + self.name + " attacked " + target.name + ' and dealt ' + str(damage) + ' damage. \n'
-                    if target.health <= 0:
-                        self.killEnemy(target)
+                    try:
+                        damage = hitcalcifier(self.name, target.name)
+                        target.takeDamage(damage)
+                        self.board.log = self.board.log + self.name + " attacked " + target.name + ' and dealt ' + str(damage) + ' damage. \n'
+                        if target.health <= 0:
+                            self.killEnemy(target)
+                    except KeyError:
+                        print("Something went wrong. Maybe that attack doesn't exist?")
             else:
                 print("Out of range! You forfeit this unit's attack turn!")
         except ValueError:
@@ -255,6 +258,7 @@ class Friendly:
 def main():
     if input('Start battle? ') == 'Y':
         neededSize = int(input('Enter board size: '))
+        global gameBoard 
         gameBoard = Board(neededSize)
         weight = 10000
         selectedEnemies = selectEnemies(weight)
