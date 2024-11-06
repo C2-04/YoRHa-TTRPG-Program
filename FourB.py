@@ -47,7 +47,8 @@ class Board:
                     try:
                         stats = getEnemy(selectedEnemies[1][i])
                         enemyName = Enemy(selectedEnemies[1][i], stats['Max Health'], stats, tuple(placementList[i]), gameBoard)
-                        gameBoard.placeEnemy(enemyName, placementList[i] )
+                        if gameBoard.squares[tuple(placementList[i])] != "":
+                            gameBoard.placeEnemy(enemyName, placementList[i] )
                     except FileNotFoundError:
                         pass
         self.enemyTurn()
