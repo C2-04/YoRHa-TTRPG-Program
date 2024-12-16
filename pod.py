@@ -4,60 +4,107 @@ from InstructorBlack import *
 from masamune import *
 from Anemone import *
 from TwoB import *
-from tkinter import *
-import tkinter.ttk as ttk
-root = Tk()
-root.geometry("1000x1000")
-root.configure(background="#c8c6ae")
-frame = Frame(root)
-frame.pack()
-def makeUnitList():
-    def retrieve():
-        selected = listbox.curselection()[0]
-        result = listbox.get(selected, selected)
-        print(result[0])
-        printStats(result[0])
-        return result(0)
-    listbox = Listbox(root)  
-    with open('savedata/YoRHa Registry', 'rb') as infile:
-        units = pickle.load(infile)
-        infile.close()
-    i=1
-    for element in units:
-        if element != '' :
-            listbox.insert(i,element)  
-            i = i+1
-    bttn = Button(frame, text = "Submit", command = retrieve)
-    bttn.pack(side= "bottom")
-    listbox.pack()
-leftframe = Frame(root)
-leftframe.pack(side=LEFT)
-leftframe.configure(background="#c8c6ae")
-rightframe = Frame(root)
-rightframe.pack(side=RIGHT)
-rightframe.configure(background="#c8c6ae")
-def enpassant():
-    print('google en passant')
-label = Label(frame, text = "Welcome, Commander.",font = ("FOT-Rodin Pro DB", 30), bg="#c8c6ae")
-label.pack()
-mainmenu = Menu(frame)
-root.config(menu = mainmenu)
-# Menu 1
-adminmenu = Menu(mainmenu, tearoff = 0)
-adminmenu.add_command(label = "Open", command = enpassant)
-adminmenu.add_command(label = "List Units", command = listunits)
-adminmenu.add_command(label = "Print The Cube", command = printTable)
-adminmenu.add_command(label = "View Unit", command = makeUnitList)
-adminmenu.add_separator()
-adminmenu.add_command(label = "Exit", command = root.destroy)
-mainmenu.add_cascade(label="Administrative", menu=adminmenu)
+from time import sleep
+import pygame as pg
+import pygame_menu
+from pygame_menu import themes
+ 
+pg.init()
+surface = pg.display.set_mode((600, 400))
+ 
+def setMissionType(missionName, missionID):
+    print(missionName)
+    print(missionID)
+ 
+def start_the_game():
+    pass
+ 
+def level_menu():
+    mainmenu._open(level)
+ 
+ 
+mainmenu = pygame_menu.Menu('Welcome', 600, 400, theme=themes.THEME_SOLARIZED)
+mainmenu.add.text_input('Name: ', default='username', maxchar=20)
+mainmenu.add.button('Play', start_the_game)
+mainmenu.add.button('Mission Types', level_menu)
+mainmenu.add.button('Quit', pygame_menu.events.EXIT)
+ 
+level = pygame_menu.Menu('Select Mission Parameters', 600, 400, theme=themes.THEME_BLUE)
+level.add.selector('Type :', [('Standard', 1), ('Endless', 2)], onchange=setMissionType)
 
-# Menu 2
-missionmenu = Menu(mainmenu, tearoff = 0)
-missionmenu.add_command(label = "Find", command = enpassant)
-missionmenu.add_command(label = "Debugger", command = enpassant)
-missionmenu.add_command(label = "Replace", command = enpassant)
-mainmenu.add_cascade(label="Missions", menu=missionmenu)
 
-root.title("YoRHa TTRPG Program")
-root.mainloop()
+TITLE = "Grid"
+TILES_HORIZONTAL = 12
+TILES_VERTICAL = TILES_HORIZONTAL
+WINDOW_WIDTH = 1000
+WINDOW_HEIGHT = 1000
+TILE_SIZE = (WINDOW_WIDTH-50)/TILES_HORIZONTAL
+
+def start_the_game():
+    mygame = Game()
+    mygame.main()
+class Player:
+    def __init__(self, surface):
+        self.surface = surface
+        self.pos = (40, 40)
+
+    def draw(self):
+        pg.draw.circle(self.surface, (255, 255, 255), self.pos, TILE_SIZE/2)
+
+    def move(self, target):
+        x = (TILE_SIZE * (target[0] // TILE_SIZE)) + TILE_SIZE/2 + 25
+        y = (TILE_SIZE * (target[1] // TILE_SIZE)) + TILE_SIZE/2 + 25
+
+        self.pos = (x, y)
+
+
+class Game:
+    def __init__(self):
+        pg.init()
+        self.clock = pg.time.Clock()
+        pg.display.set_caption(TITLE)
+        self.surface = pg.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT))
+        self.loop = True
+        self.player = Player(self.surface)
+
+    def main(self):
+        while self.loop:
+            self.grid_loop()
+        pg.quit()
+
+    def grid_loop(self):
+        self.surface.fill((0, 0, 0))
+        for row in range(TILES_HORIZONTAL):
+            for col in range(row % 2, TILES_HORIZONTAL, 2):
+                pg.draw.rect(
+                    self.surface,
+                    (40, 40, 40),
+                    (row * TILE_SIZE + 25, col * TILE_SIZE+ 25, TILE_SIZE, TILE_SIZE),
+                )
+        self.player.draw()
+        for event in pg.event.get():
+            if event.type == pg.QUIT:
+                self.loop = False
+            elif event.type == pg.KEYDOWN:
+                if event.key == pg.K_ESCAPE:
+                    self.loop = False
+            elif event.type == pg.MOUSEBUTTONUP:
+                mousePos = pg.mouse.get_pos()
+                realPos = list(mousePos)
+                realPos[0], realPos[1] = realPos[0] - 25, realPos[1] - 25
+                self.player.move(realPos)
+        pg.display.update()
+
+
+
+while True:
+    events = pg.event.get()
+    for event in events:
+        if event.type == pg.QUIT:
+            exit()
+ 
+    if mainmenu.is_enabled():
+        mainmenu.update(events)
+        mainmenu.draw(surface)
+ 
+    pg.display.update()

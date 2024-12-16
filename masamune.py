@@ -29,8 +29,6 @@ def createWeapon(name):
     with open("weapons/"+stats['ID']+'.throngler', 'wb') as outfile:
         pickle.dump(stats, outfile)
         outfile.close()
-createTemplate()
-createWeapon("YoRHa-Issue Rifle")
 def createEnemy(enemName):
     stats = {}
     stats['Machine'] = int(input('Enter machine attack: '))
