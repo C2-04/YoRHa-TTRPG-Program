@@ -5,11 +5,12 @@ import random
 import math
 import pickle
 import os
-def creatifier(unittype, unitNumber):
-    if unittype == "":
+def creatifier():
+    unittype = input("Need a specific type? ")
+    if unittype == "no":
         unittype = random.choice(["A", "B", "C", "D", "E", "G", "H", "O", "R", "S"])
-
-    if unitNumber == '':
+    unitNumber = input("Need a specific number? ")
+    if unitNumber == 'no':
         unitNumber = random.randint(1, 100)
     print("Number", unitNumber, "Type", unittype)
     tgh = 5
@@ -296,7 +297,7 @@ def main():
     while mode != "quit":
         mode = input("Enter the needed operation (create, listweap, listunit, printCube, printUnit, editunit, register, assignWeap, delete, convert, quit): ")
         if mode == "create":
-            creatifier( input("Need a specific type? ")   ,input("Need a specific number? "))
+            creatifier()
         if mode == 'listweap':
             listweapons()
         if mode == 'listunit':
